@@ -23,7 +23,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<User>> GetUser(int id)
+    public async Task<ActionResult<User>> GetUser(string id)
     {
         var user = await _context.Users.FindAsync(id);
 
@@ -38,13 +38,13 @@ public class UsersController : ControllerBase
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
 
-        return CreatedAtAction("GetUser", new { user.id }, user);
+        return CreatedAtAction("GetUser", new { user.Id }, user);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> PutUser(int id, User user)
+    public async Task<IActionResult> PutUser(string id, User user)
     {
-        if (id != user.id) return BadRequest();
+        if (id != user.Id) return BadRequest();
 
         _context.Entry(user).State = EntityState.Modified;
 
@@ -54,7 +54,7 @@ public class UsersController : ControllerBase
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!_context.Users.Any(e => e.id == id))
+            if (!_context.Users.Any(e => e.Id == id))
                 return NotFound();
             throw;
         }
@@ -63,7 +63,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteUser(int id)
+    public async Task<IActionResult> DeleteUser(string id)
     {
         var user = await _context.Users.FindAsync(id);
         if (user == null) return NotFound();

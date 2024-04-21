@@ -1,10 +1,8 @@
+﻿namespace TaskmanAPI.Model;
 using System.ComponentModel.DataAnnotations;
 
-namespace TaskmanAPI.Model;
-
-public class Project
+public class ProjTask
 {
-    // PLACEHOLDER
     [Key]
     public int Id { get; set; }
 }
