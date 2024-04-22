@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using TaskmanAPI.Contexts;
 using TaskmanAPI.Models;
 
@@ -7,7 +8,7 @@ namespace TaskmanAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProjectsController : ControllerBase
+    public class ProjectsController : Controller
     {
         private readonly DefaultContext _context;
 
@@ -15,6 +16,16 @@ namespace TaskmanAPI.Controllers
         {
             _context = context;
         }
+        /*
+        public IActionResult GetUserProjects(String userId)
+        {
+            var project = new Project(); // Inițializează un obiect de tip Project
+            var projects = project.GetProjectsForUser(userId); // Obține proiectele pentru utilizatorul dat
+
+            // Returnează proiectele sub forma de View sau JsonResult, în funcție de nevoile tale
+            return View(projects);
+        }
+        */
 
         // GET: api/Projects
         [HttpGet]
@@ -25,7 +36,7 @@ namespace TaskmanAPI.Controllers
 
         // GET: api/Projects/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Project>> GetProject(int id)
+        public async Task<ActionResult<Project>> Show(int id)
         {
             var project = await _context.Projects.FindAsync(id);
 
@@ -37,10 +48,11 @@ namespace TaskmanAPI.Controllers
             return project;
         }
 
+       
         // PUT: api/Projects/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProject(int id, Project project)
+        public async Task<IActionResult> Edit(int id, Project project)
         {
             if (id != project.Id)
             {
@@ -71,7 +83,7 @@ namespace TaskmanAPI.Controllers
         // POST: api/Projects
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Project>> PostProject(Project project)
+        public async Task<ActionResult<Project>> New(Project project)
         {
             _context.Projects.Add(project);
             await _context.SaveChangesAsync();
@@ -81,7 +93,7 @@ namespace TaskmanAPI.Controllers
 
         // DELETE: api/Projects/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProject(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var project = await _context.Projects.FindAsync(id);
             if (project == null)
