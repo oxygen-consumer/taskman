@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TaskmanAPI.Contexts;
-using TaskmanAPI.Model;
+using TaskmanAPI.Models;
 
 namespace TaskmanAPI.Controllers
 {
