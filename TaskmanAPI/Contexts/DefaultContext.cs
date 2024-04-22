@@ -1,17 +1,17 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using TaskmanAPI.Model;
 using TaskmanAPI.Models;
 
 namespace TaskmanAPI.Contexts;
 
-// RENAME THIS IF USING MORE CONTEXTS
-public class DefaultContext : DbContext
+public class DefaultContext : IdentityDbContext<User>
 {
     public DefaultContext(DbContextOptions<DefaultContext> options) : base(options)
     {
     }
 
-    public DbSet<User> Users { get; set; }
+    // public DbSet<User> Users { get; set; }
     public DbSet<Project> Projects { get; set; }
     public DbSet<ProjTask> ProjTasks { get; set; }
     public DbSet<RolePerProject> RolePerProjects { get; set; }
