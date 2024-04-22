@@ -21,8 +21,17 @@ public class DefaultContext : IdentityDbContext<User>
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<RolePerProject>().HasKey(ab => new { ab.UserId, ab.ProjectId });
+        modelBuilder.Entity<RolePerProject>()
+            .HasKey(rp => new { rp.UserId, rp.ProjectId });
 
-        //modelBuilder.Entity<RolePerProject>().HasOne(ab => ab.User).WithMany(ab => ab.RolePerProjects)
+        modelBuilder.Entity<RolePerProject>()
+            .HasOne(rp => rp.User)
+            .WithMany(u => u.RolePerProjects)
+            .HasForeignKey(rp => rp.UserId);
+
+        modelBuilder.Entity<RolePerProject>()
+            .HasOne(rp => rp.Project)
+            .WithMany(p => p.RolePerProjects)
+            .HasForeignKey(rp => rp.ProjectId);
     }
 }

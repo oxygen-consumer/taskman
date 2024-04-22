@@ -169,7 +169,7 @@ namespace TaskmanAPI.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ProjTasks");
+                    b.ToTable("ProjTasks", (string)null);
                 });
 
             modelBuilder.Entity("TaskmanAPI.Model.Project", b =>
@@ -182,7 +182,7 @@ namespace TaskmanAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Projects");
+                    b.ToTable("Projects", (string)null);
                 });
 
             modelBuilder.Entity("TaskmanAPI.Model.User", b =>
@@ -265,7 +265,7 @@ namespace TaskmanAPI.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("RolePerProjects");
+                    b.ToTable("RolePerProjects", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
