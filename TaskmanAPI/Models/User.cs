@@ -1,13 +1,23 @@
-namespace TaskmanAPI.Model;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using TaskmanAPI.Models;
 
-// DRAFT
-public class User
+namespace TaskmanAPI.Model
 {
-    public int id;
+    public class User
+    {
+        [Key]
+        public String Id { get; set; }
+        [Required(ErrorMessage = "Numele de utilizator este obligatoriu")]
+        public string UserName { get; set; }
+        [Required(ErrorMessage = "Parola este obligatorie")]
+        public string Password { get; set; }
+        [Required(ErrorMessage = "Adresa de email este obligatorie")]
+        public string Email { get; set; }
 
-    public string username { get; set; }
 
-    public string password { get; set; }
-
-    public string email { get; set; }
+        //to add - notification, comment, reaction (?)
+        public virtual ICollection<ProjTask>? Tasks { get; set; }
+        public virtual ICollection<RolePerProject>? RolePerProjects { get; set; }
+    }
 }
