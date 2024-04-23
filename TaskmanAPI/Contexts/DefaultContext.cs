@@ -34,7 +34,7 @@ public class DefaultContext : DbContext
         //relatia one-to-many (PRoject-RolePerProject)
         modelBuilder.Entity<RolePerProject>()
             .HasOne(t => t.Project)
-           .WithMany(u => u.Comenzi) // vectorul de RolePerProject din Project
+           .WithMany(u => u.Roles) // vectorul de RolePerProject din Project
            .HasForeignKey(t => t.ProjectId)
            .OnDelete(DeleteBehavior.Restrict);
 

@@ -16,7 +16,9 @@ namespace TaskmanAPI.Controllers
         {
             _context = context;
         }
+        
         /*
+        [HttpGet]
         public IActionResult GetUserProjects(String userId)
         {
             var project = new Project(); // Inițializează un obiect de tip Project
@@ -26,6 +28,7 @@ namespace TaskmanAPI.Controllers
             return View(projects);
         }
         */
+        
 
         // GET: api/Projects
         [HttpGet]

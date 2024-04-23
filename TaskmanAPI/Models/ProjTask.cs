@@ -22,10 +22,10 @@ public class ProjTask
 
     //TO DO - status changes, comments
 
-    public virtual ICollection<User> Users { get; set; }
+    public virtual ICollection<User>? Users { get; set; }
 
     //subtaskuri
     //public virtual ICollection<ProjTask> ProjTasks { get; set; }
 
-    public virtual Project Project { get; set; }
+    public virtual Project? Project { get; set; }
 }

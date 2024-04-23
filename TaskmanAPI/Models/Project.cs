@@ -8,14 +8,14 @@ public class Project
     public int Id { get; set; }
     public int ProjectOwner { get; set; }
     public string Name { get; set; }
-    public ICollection<RolePerProject> Comenzi { get; set; }
-    public ICollection<Task> Task {  get; set; }
+    public ICollection<RolePerProject>? Roles { get; set; }
+    public ICollection<Task>? Task {  get; set; }
 
     public IEnumerable<Project> GetProjectsForUser(String userId)
     {
         var projectsForUser = new List<Project>();
 
-        foreach (var rolePerProject in Comenzi)
+        foreach (var rolePerProject in Roles)
         {
             // Verificãm dacã utilizatorul dat este în lista de utilizatori a proiectului
             if (rolePerProject.UserId == userId)
