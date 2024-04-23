@@ -1,11 +1,13 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.General;
 using TaskmanAPI.Model;
 using TaskmanAPI.Models;
 
 namespace TaskmanAPI.Contexts;
 
 // RENAME THIS IF USING MORE CONTEXTS
-public class DefaultContext : DbContext
+public class DefaultContext : IdentityDbContext<User>
 {
     public DefaultContext(DbContextOptions<DefaultContext> options) : base(options)
     {
