@@ -1,4 +1,6 @@
-﻿namespace TaskmanAPI.Model;
+﻿using TaskmanAPI.Models;
+
+namespace TaskmanAPI.Model;
 using System.ComponentModel.DataAnnotations;
 
 public class ProjTask
