@@ -34,7 +34,7 @@ namespace TaskmanAPI.Migrations
 
                     b.HasIndex("UsersId");
 
-                    b.ToTable("ProjTaskUser", (string)null);
+                    b.ToTable("ProjTaskUser");
                 });
 
             modelBuilder.Entity("TaskmanAPI.Model.Notification", b =>
@@ -64,7 +64,7 @@ namespace TaskmanAPI.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Notifications", (string)null);
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("TaskmanAPI.Model.ProjTask", b =>
@@ -96,7 +96,7 @@ namespace TaskmanAPI.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("ProjTasks", (string)null);
+                    b.ToTable("ProjTasks");
                 });
 
             modelBuilder.Entity("TaskmanAPI.Model.User", b =>
@@ -118,7 +118,7 @@ namespace TaskmanAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("TaskmanAPI.Models.Project", b =>
@@ -138,7 +138,7 @@ namespace TaskmanAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Projects", (string)null);
+                    b.ToTable("Projects");
                 });
 
             modelBuilder.Entity("TaskmanAPI.Models.RolePerProject", b =>
@@ -157,7 +157,7 @@ namespace TaskmanAPI.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("RolePerProjects", (string)null);
+                    b.ToTable("RolePerProjects");
                 });
 
             modelBuilder.Entity("TaskmanAPI.Models.Task", b =>
@@ -175,7 +175,7 @@ namespace TaskmanAPI.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("Task", (string)null);
+                    b.ToTable("Task");
                 });
 
             modelBuilder.Entity("ProjTaskUser", b =>
