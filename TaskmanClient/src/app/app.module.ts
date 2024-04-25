@@ -11,9 +11,7 @@ import {HeaderComponent} from "./header/header.component";
 
 @NgModule({
   declarations: [
-    LoginComponent,
-    HeaderComponent,
-    AppComponent,
+
   ],
   exports: [
     HeaderComponent
@@ -23,6 +21,9 @@ import {HeaderComponent} from "./header/header.component";
     BrowserModule,
     RouterModule,
     FormsModule,
+    LoginComponent,
+    HeaderComponent,
+    AppComponent,
 
   ]
 })
