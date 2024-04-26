@@ -1,0 +1,26 @@
+name: Angular
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: TaskmanClient
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20.12.2
+    - name: Restore dependencies
+      run: npm install
+    - name: Build
+      run: npm run build --prod
+    # TODO: tests?
