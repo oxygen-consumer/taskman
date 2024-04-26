@@ -9,11 +9,11 @@ export class LoginServiceService {
   constructor(private http:HttpClient) { }
 
   onLogin(data: any): Observable<any> {
-    return this.http.post<any>("localhost:5096/account/login", data);
+    return this.http.post<any>("http://127.0.0.1:5096/account/login", data);
   }
 
   onRegister(data: any): Observable<any> {
-    return this.http.post<any>("localhost:5096/account/register", data);
+    return this.http.post<any>("http://127.0.0.1:5096/account/register", data);
   }
 
 
