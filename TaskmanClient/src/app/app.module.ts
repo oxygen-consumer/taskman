@@ -6,6 +6,8 @@ import {Router, RouterModule} from "@angular/router";
 import {FormsModule} from "@angular/forms";
 import {LoginComponent} from "./login/login.component";
 import {HeaderComponent} from "./header/header.component";
+import {HttpClientModule} from "@angular/common/http";
+import {LoginServiceService} from "./service/login-service.service";
 
 
 
@@ -14,7 +16,8 @@ import {HeaderComponent} from "./header/header.component";
 
   ],
   exports: [
-    HeaderComponent
+    HeaderComponent,
+
   ],
   imports: [
     CommonModule,
@@ -24,6 +27,7 @@ import {HeaderComponent} from "./header/header.component";
     LoginComponent,
     HeaderComponent,
     AppComponent,
+    HttpClientModule,
 
   ]
 })

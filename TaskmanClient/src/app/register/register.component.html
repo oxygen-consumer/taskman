@@ -1,4 +1,4 @@
-<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit(f)" #f="ngForm">
   <div>
     <label for="email">Email:</label>
     <input type="email" id="email" formControlName="email">
