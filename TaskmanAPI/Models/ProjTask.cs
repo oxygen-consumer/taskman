@@ -2,6 +2,7 @@
 
 namespace TaskmanAPI.Model;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 public class ProjTask
 {
@@ -21,11 +22,11 @@ public class ProjTask
     public DateTime Deadline { get; set; }
 
     //TO DO - status changes, comments
-
+    [JsonIgnore]
     public virtual ICollection<User>? Users { get; set; }
 
     //subtaskuri
     //public virtual ICollection<ProjTask> ProjTasks { get; set; }
-
+    [JsonIgnore]
     public virtual Project? Project { get; set; }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Data;
+using System.Security.Claims;
 using TaskmanAPI.Contexts;
 using TaskmanAPI.Models;
 
@@ -17,25 +18,39 @@ namespace TaskmanAPI.Controllers
             _context = context;
         }
         
-        /*
         [HttpGet]
-        public IActionResult GetUserProjects(String userId)
+        public async Task<ActionResult<IEnumerable<Project>>> GetUserProjects()
         {
-            var project = new Project(); // Inițializează un obiect de tip Project
-            var projects = project.GetProjectsForUser(userId); // Obține proiectele pentru utilizatorul dat
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var proles = _context.RolePerProjects.Where(rp => rp.UserId == userId).ToList();
+            var projects = new List<Project>();
+            var projectids = new List<int>();
 
-            // Returnează proiectele sub forma de View sau JsonResult, în funcție de nevoile tale
-            return View(projects);
+            //extrag id-urile proiectelor in care userul are roluri
+            foreach (var p in proles)
+            {
+                if(p.ProjectId != null)
+                {
+                    if(!projects.Any(proj => proj.Id == p.ProjectId))
+                        projectids.Add((int)p.ProjectId);
+                }
+            }
+  
+            foreach (var id in projectids)
+            {
+                var project = _context.Projects.Where(p => p.Id == id).First();
+                projects.Add(project);
+            }
+            return projects;
         }
-        */
         
 
         // GET: api/Projects
-        [HttpGet]
+        /*[HttpGet]
         public async Task<ActionResult<IEnumerable<Project>>> GetProjects()
         {
             return await _context.Projects.ToListAsync();
-        }
+        }*/
 
         // GET: api/Projects/5
         [HttpGet("{id}")]
@@ -48,7 +63,14 @@ namespace TaskmanAPI.Controllers
                 return NotFound();
             }
 
-            return project;
+            //verific daca userul curent are acces la proiect
+            if(_context.RolePerProjects.Any(rp => rp.ProjectId == id
+                && rp.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier))) 
+            {
+                return project;
+            }
+
+            return Forbid();
         }
 
        
@@ -61,6 +83,11 @@ namespace TaskmanAPI.Controllers
             {
                 return BadRequest();
             }
+
+            //verif daca userul curent are acces la proiect
+            if (!_context.RolePerProjects.Any(rp => rp.ProjectId == id
+                && rp.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier)))
+                return Forbid();
 
             _context.Entry(project).State = EntityState.Modified;
 
@@ -88,9 +115,20 @@ namespace TaskmanAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Project>> New(Project project)
         {
+            project.ProjectOwner = User.FindFirstValue(ClaimTypes.NameIdentifier);
             _context.Projects.Add(project);
             await _context.SaveChangesAsync();
 
+            //creez un rol de admin pentru creatorul proiectului
+            RolePerProject NewAdminRole = new RolePerProject(project.ProjectOwner, project.Id, "Admin");
+            _context.RolePerProjects.Add(NewAdminRole);
+            await _context.SaveChangesAsync();
+
+            //adaug noul rol in bd
+            project.RolePerProjects.Add(NewAdminRole);
+            
+            _context.Entry(project).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
             return CreatedAtAction("GetProject", new { id = project.Id }, project);
         }
 
@@ -99,10 +137,18 @@ namespace TaskmanAPI.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var project = await _context.Projects.FindAsync(id);
+
             if (project == null)
             {
                 return NotFound();
             }
+
+            var privilege = _context.RolePerProjects.Where(rp => rp.ProjectId == id
+                && rp.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier) && rp.RoleName == "Admin");
+
+            //verif daca userul curent are acces la proiect
+            if (!privilege.Any())
+                return Forbid();
 
             _context.Projects.Remove(project);
             await _context.SaveChangesAsync();
