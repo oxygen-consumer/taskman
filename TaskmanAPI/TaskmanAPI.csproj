@@ -50,4 +50,8 @@
       <Folder Include="Authentication\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Authentication\" />
+    </ItemGroup>
+
 </Project>
