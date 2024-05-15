@@ -24,7 +24,8 @@ public class DefaultContext : IdentityDbContext<User>
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<RolePerProject>().HasKey(ab => new { ab.UserId, ab.ProjectId });
+        modelBuilder.Entity<RolePerProject>()
+            .HasKey(ab => new { ab.UserId, ab.ProjectId });
         
         //relatie one-to-many ( User-Notification )
         modelBuilder.Entity<Notification>()
@@ -33,13 +34,23 @@ public class DefaultContext : IdentityDbContext<User>
            .HasForeignKey(t => t.UserId)
            .OnDelete(DeleteBehavior.Restrict); 
 
-        //relatia one-to-many (PRoject-RolePerProject)
+        //relatia one-to-many (Project-RolePerProject)
         modelBuilder.Entity<RolePerProject>()
-            .HasOne(t => t.Project)
-           .WithMany(u => u.Roles) // vectorul de RolePerProject din Project
-           .HasForeignKey(t => t.ProjectId)
-           .OnDelete(DeleteBehavior.Restrict);
+           .HasOne(t => t.Project)
+           .WithMany(t => t.RolePerProjects) // vectorul de RolePerProject din Project
+           .HasForeignKey(t => t.ProjectId);
 
+        modelBuilder.Entity<RolePerProject>()
+            .HasOne(t => t.User)
+            .WithMany(t => t.RolePerProjects)
+            .HasForeignKey(t => t.UserId);
+
+        /*keep this if needed in the future
+         * 
+         * modelBuilder.Entity<Project>()
+            .HasMany(t => t.RolePerProjects)
+            .WithOne(t => t.Project)
+            .HasForeignKey(t => t.ProjectId);*/
 
         //modelBuilder.Entity<RolePerProject>().HasOne(ab => ab.User).WithMany(ab => ab.RolePerProjects)
     }
