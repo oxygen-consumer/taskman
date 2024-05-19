@@ -1,30 +1,20 @@
 using System.ComponentModel.DataAnnotations;
-using System.Data;
+using System.Text.Json.Serialization;
+using TaskmanAPI.Model;
 
 namespace TaskmanAPI.Models;
 
 public class Project
 {
+    [Key]
     public int Id { get; set; }
-    public int ProjectOwner { get; set; }
+    public string ProjectOwner { get; set; }
     public string Name { get; set; }
-    public ICollection<RolePerProject>? Roles { get; set; }
-    public ICollection<Task>? Task {  get; set; }
 
-    public IEnumerable<Project> GetProjectsForUser(String userId)
-    {
-        var projectsForUser = new List<Project>();
+    [JsonIgnore]
+    public ICollection<RolePerProject>? RolePerProjects { get; set; }
 
-        foreach (var rolePerProject in Roles)
-        {
-            // Verificãm dacã utilizatorul dat este în lista de utilizatori a proiectului
-            if (rolePerProject.UserId == userId)
-            {
-                // Dacã gãsim utilizatorul în lista de utilizatori a proiectului, adãugãm proiectul la lista de proiecte pentru utilizatorul respectiv
-                projectsForUser.Add(rolePerProject.Project);
-            }
-        }
+    [JsonIgnore]
+    public ICollection<ProjTask>? Task {  get; set; }
 
-        return projectsForUser;
-    }
 }

@@ -9,19 +9,7 @@ namespace TaskmanAPI.Models
 {
     public class RolePerProjectPolicyProvider : IAuthorizationPolicyProvider
     {
-        /*
-        const string POLICY_PREFIX = "RoleInfo";
-        public Task<AuthorizationPolicy?> GetPolicyAsync(string policyName)
-        {
-            if (policyName.StartsWith(POLICY_PREFIX, StringComparison.OrdinalIgnoreCase))
-            {
-                var role = policyName.Substring(POLICY_PREFIX.Length);
-                var policy = new AuthorizationPolicyBuilder();
-                policy.AddRequirements(new RolePerProjectRequirement(role));
-                return Task.FromResult<AuthorizationPolicy?>(policy.Build());
-            }
-            return Task.FromResult<AuthorizationPolicy?>(null);
-        }*/
+        const string POLICY_PREFIX = "ProjectRole:";
 
         private readonly DefaultContext _dbContext;
         public DefaultAuthorizationPolicyProvider FallbackPolicyProvider { get; set; }
@@ -39,22 +27,27 @@ namespace TaskmanAPI.Models
 
         public async Task<AuthorizationPolicy?> GetPolicyAsync(string policyName)
         {
-            if (policyName.StartsWith("ProjectRole:"))
+            return new AuthorizationPolicyBuilder(policyName).Build();
+            /* not what i need
+             * call a handler??
+             * 
+             * if (!policyName.StartsWith("ProjectRole:")) return null;
+            
+            //policyname contine rolulr
+            //requirements este ca selectul din roleperprojects sa nu fie nul pt rolul si userul respectiv
+            var userId = int.Parse(policyName.Substring("ProjectRole:".Length));
+            var roleNames = await GetRoleForProjectAsync(userId);
+
+            var requirements = 
+
+            if (!string.IsNullOrEmpty(roleName))
             {
-                var projectId = int.Parse(policyName.Substring("ProjectRole:".Length));
-                var roleName = await GetRoleForProjectAsync(projectId);
+                var policy = new AuthorizationPolicyBuilder()
+                    .RequireRole(roleName)
+                    .Build();
 
-                if (!string.IsNullOrEmpty(roleName))
-                {
-                    var policy = new AuthorizationPolicyBuilder()
-                        .RequireRole(roleName)
-                        .Build();
-
-                    return policy;
-                }
-            }
-
-            return null;
+                return policy;
+            }*/
         }
 
         private async Task<string> GetRoleForProjectAsync(int projectId)
