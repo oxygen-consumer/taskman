@@ -16,5 +16,5 @@ public class Project
 
     [JsonIgnore]
     public ICollection<ProjTask>? Task {  get; set; }
-
+  
 }
