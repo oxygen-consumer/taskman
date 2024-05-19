@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TaskmanAPI.Contexts;
@@ -11,9 +12,11 @@ using TaskmanAPI.Contexts;
 namespace TaskmanAPI.Migrations
 {
     [DbContext(typeof(DefaultContext))]
-    partial class DefaultContextModelSnapshot : ModelSnapshot
+    [Migration("20240513143127_fixmig1")]
+    partial class fixmig1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -321,7 +324,7 @@ namespace TaskmanAPI.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("text");
 
-                    b.Property<int?>("ProjectId")
+                    b.Property<int>("ProjectId")
                         .HasColumnType("integer");
 
                     b.Property<string>("RoleName")
@@ -426,9 +429,9 @@ namespace TaskmanAPI.Migrations
             modelBuilder.Entity("TaskmanAPI.Models.RolePerProject", b =>
                 {
                     b.HasOne("TaskmanAPI.Models.Project", "Project")
-                        .WithMany("RolePerProjects")
+                        .WithMany("Roles")
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("TaskmanAPI.Model.User", "User")
@@ -451,7 +454,7 @@ namespace TaskmanAPI.Migrations
 
             modelBuilder.Entity("TaskmanAPI.Models.Project", b =>
                 {
-                    b.Navigation("RolePerProjects");
+                    b.Navigation("Roles");
 
                     b.Navigation("Task");
                 });

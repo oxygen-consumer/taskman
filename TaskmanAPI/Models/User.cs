@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TaskmanAPI.Models;
@@ -20,6 +21,7 @@ namespace TaskmanAPI.Model
         //to add - notification, comment, reaction (?)
         public ICollection<Notification> Notifications { get; set; }
         public virtual ICollection<ProjTask>? Tasks { get; set; }
+        [JsonIgnore]
         public virtual ICollection<RolePerProject>? RolePerProjects { get; set; }
     }
 }
