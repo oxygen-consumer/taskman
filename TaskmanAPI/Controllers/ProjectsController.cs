@@ -203,7 +203,8 @@ namespace TaskmanAPI.Controllers
             // check if user has privilege to remove another user
             var privilege = _context.RolePerProjects.Where(rp => rp.ProjectId == id
                 && rp.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier) && (rp.RoleName == "Owner" || rp.RoleName == "Admin"));
-            if (!privilege.Any())
+            // a user should be able to remove himself from a project
+            if (!privilege.Any() && user_id != User.FindFirstValue(ClaimTypes.NameIdentifier))
                 return Forbid();
             
             var userRole = _context.RolePerProjects.Where(rp => rp.ProjectId == id && rp.UserId == user_id);
