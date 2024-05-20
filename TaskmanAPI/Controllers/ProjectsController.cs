@@ -209,7 +209,9 @@ namespace TaskmanAPI.Controllers
                 return Forbid();
 
             var userRole = _context.RolePerProjects.Where(rp => rp.ProjectId == id && rp.UserId == user_id);
-            
+            if (!userRole.Any())
+                return NotFound();
+
             _context.RolePerProjects.Remove(userRole.First());
             await _context.SaveChangesAsync();
             return project;
