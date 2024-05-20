@@ -211,6 +211,9 @@ namespace TaskmanAPI.Controllers
             if (!privilege.Any() && user_id != User.FindFirstValue(ClaimTypes.NameIdentifier))
                 return Forbid();
 
+            if (!userRole.Any())
+                return NotFound();
+
             _context.RolePerProjects.Remove(userRole.First());
             await _context.SaveChangesAsync();
             return project;
