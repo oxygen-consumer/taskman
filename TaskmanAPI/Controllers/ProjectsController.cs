@@ -5,6 +5,10 @@ using System.Security.Claims;
 using TaskmanAPI.Contexts;
 using TaskmanAPI.Models;
 
+/* TO DO
+ * Add method for adding task to project that calls new for projtask
+ */
+
 namespace TaskmanAPI.Controllers
 {
     [Route("api/[controller]")]
@@ -27,7 +31,7 @@ namespace TaskmanAPI.Controllers
             var projects = new List<Project>();
             var projectids = new List<int>();
 
-            //extrag id-urile proiectelor in care userul are roluri
+            //project ids in which the user has roles
             foreach (var p in proles)
             {
                 if (p.ProjectId != null)
@@ -56,7 +60,7 @@ namespace TaskmanAPI.Controllers
                 return NotFound();
             }
 
-            //verific daca userul curent are acces la proiect
+            //if user has role in project, then they're in it
             if (_context.RolePerProjects.Any(rp => rp.ProjectId == id
                 && rp.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier)))
             {
@@ -68,7 +72,6 @@ namespace TaskmanAPI.Controllers
 
 
         // PUT: api/Projects/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> Edit(int id, Project project)
         {
@@ -77,9 +80,10 @@ namespace TaskmanAPI.Controllers
                 return BadRequest();
             }
 
-            //verif daca userul curent are acces la proiect
+            //owner or admins can edit project
             if (!_context.RolePerProjects.Any(rp => rp.ProjectId == id
-                && rp.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier)))
+                && rp.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier)
+                && (rp.RoleName == "Owner" || rp.RoleName == "Admin")))
                 return Forbid();
 
             _context.Entry(project).State = EntityState.Modified;
@@ -104,7 +108,6 @@ namespace TaskmanAPI.Controllers
         }
 
         // POST: api/Projects
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Project>> New(Project project)
         {
@@ -117,12 +120,12 @@ namespace TaskmanAPI.Controllers
             _context.Projects.Add(project);
             await _context.SaveChangesAsync();
 
-            //creez un rol de owner pentru creatorul proiectului
+            //creating an owner role for the creator of the project
             RolePerProject NewOwnerRole = new RolePerProject(ProjectOwner, project.Id, "Owner");
             _context.RolePerProjects.Add(NewOwnerRole);
             await _context.SaveChangesAsync();
 
-            //adaug noul rol in bd
+            //ading new role to db
             project.RolePerProjects.Add(NewOwnerRole);
 
             _context.Entry(project).State = EntityState.Modified;
@@ -141,10 +144,10 @@ namespace TaskmanAPI.Controllers
                 return NotFound();
             }
 
+            //only the owner can delete the project
             var privilege = _context.RolePerProjects.Where(rp => rp.ProjectId == id
                 && rp.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier) && rp.RoleName == "Owner");
 
-            //verif daca userul curent are acces la proiect
             if (!privilege.Any())
                 return Forbid();
 

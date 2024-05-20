@@ -25,7 +25,7 @@ public class ProjTask
     [JsonIgnore]
     public virtual ICollection<User>? Users { get; set; }
 
-    //subtaskuri
+    //subtasks
     //public virtual ICollection<ProjTask> ProjTasks { get; set; }
     [JsonIgnore]
     public virtual Project? Project { get; set; }
