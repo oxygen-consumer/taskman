@@ -17,7 +17,8 @@ namespace TaskmanAPI.Controllers
         {
             _context = context;
         }
-        
+
+        // GET: api/Projects
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Project>>> GetUserProjects()
         {
@@ -29,13 +30,13 @@ namespace TaskmanAPI.Controllers
             //extrag id-urile proiectelor in care userul are roluri
             foreach (var p in proles)
             {
-                if(p.ProjectId != null)
+                if (p.ProjectId != null)
                 {
-                    if(!projects.Any(proj => proj.Id == p.ProjectId))
+                    if (!projects.Any(proj => proj.Id == p.ProjectId))
                         projectids.Add((int)p.ProjectId);
                 }
             }
-  
+
             foreach (var id in projectids)
             {
                 var project = _context.Projects.Where(p => p.Id == id).First();
@@ -43,14 +44,6 @@ namespace TaskmanAPI.Controllers
             }
             return projects;
         }
-        
-
-        // GET: api/Projects
-        /*[HttpGet]
-        public async Task<ActionResult<IEnumerable<Project>>> GetProjects()
-        {
-            return await _context.Projects.ToListAsync();
-        }*/
 
         // GET: api/Projects/5
         [HttpGet("{id}")]
@@ -64,8 +57,8 @@ namespace TaskmanAPI.Controllers
             }
 
             //verific daca userul curent are acces la proiect
-            if(_context.RolePerProjects.Any(rp => rp.ProjectId == id
-                && rp.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier))) 
+            if (_context.RolePerProjects.Any(rp => rp.ProjectId == id
+                && rp.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier)))
             {
                 return project;
             }
@@ -73,7 +66,7 @@ namespace TaskmanAPI.Controllers
             return Forbid();
         }
 
-       
+
         // PUT: api/Projects/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -116,11 +109,11 @@ namespace TaskmanAPI.Controllers
         public async Task<ActionResult<Project>> New(Project project)
         {
             var ProjectOwner = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            
+
             // check if user exists
             if (!_context.Users.Any(u => u.Id == ProjectOwner))
                 return BadRequest("User does not exist");
-            
+
             _context.Projects.Add(project);
             await _context.SaveChangesAsync();
 
@@ -131,12 +124,12 @@ namespace TaskmanAPI.Controllers
 
             //adaug noul rol in bd
             project.RolePerProjects.Add(NewOwnerRole);
-            
+
             _context.Entry(project).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return CreatedAtAction("GetProject", new { id = project.Id }, project);
         }
-        
+
         // DELETE: api/Projects/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
@@ -160,8 +153,8 @@ namespace TaskmanAPI.Controllers
 
             return NoContent();
         }
-        
-        // add another user to project
+
+        // add another user to project: api/Projects/{id}/adduser/{user_id}
         [HttpPost("{id}/adduser/{user_id}")]
         public async Task<ActionResult<Project>> AddUser(int id, string user_id)
         {
@@ -169,8 +162,15 @@ namespace TaskmanAPI.Controllers
 
             if (project == null)
             {
-                return NotFound();
+                return NotFound("Project not found.");
             }
+
+            var user = await _context.Users.FindAsync(user_id);
+            if (user == null)
+            {
+                return BadRequest("User not found.");
+            }
+
 
             // check if user has privilege to add another user
             // TODO: we should move the privilege check to a separate function (maybe even a service)
@@ -188,8 +188,8 @@ namespace TaskmanAPI.Controllers
             await _context.SaveChangesAsync();
             return project;
         }
-        
-        // remove user from project
+
+        // remove user from project: api/Projects/{id}/removeuser/{user_id}
         [HttpDelete("{id}/removeuser/{user_id}")]
         public async Task<ActionResult<Project>> RemoveUser(int id, string user_id)
         {
@@ -197,26 +197,26 @@ namespace TaskmanAPI.Controllers
 
             if (project == null)
             {
-                return NotFound();
+                return NotFound("Project not found.");
             }
 
             // check if user has privilege to remove another user
             var privilege = _context.RolePerProjects.Where(rp => rp.ProjectId == id
                 && rp.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier) && (rp.RoleName == "Owner" || rp.RoleName == "Admin"));
+            if (!privilege.Any())
+                return Forbid();
+
+            var userRole = _context.RolePerProjects.Where(rp => rp.ProjectId == id && rp.UserId == user_id);
             // a user should be able to remove himself from a project
             if (!privilege.Any() && user_id != User.FindFirstValue(ClaimTypes.NameIdentifier))
                 return Forbid();
-            
-            var userRole = _context.RolePerProjects.Where(rp => rp.ProjectId == id && rp.UserId == user_id);
-            if (!userRole.Any())
-                return NotFound();
-            
+
             _context.RolePerProjects.Remove(userRole.First());
             await _context.SaveChangesAsync();
             return project;
         }
-        
-        // promote user to admin
+
+        // promote user to admin: api/Projects/{id}/promoteuser/{user_id}
         [HttpPost("{id}/promoteuser/{user_id}")]
         public async Task<ActionResult<Project>> PromoteUser(int id, string user_id)
         {
@@ -224,7 +224,7 @@ namespace TaskmanAPI.Controllers
 
             if (project == null)
             {
-                return NotFound();
+                return NotFound("Project not found.");
             }
 
             // check if user has privilege to promote another user
@@ -232,18 +232,18 @@ namespace TaskmanAPI.Controllers
                 && rp.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier) && rp.RoleName == "Owner");
             if (!privilege.Any())
                 return Forbid();
-            
+
             var userRole = _context.RolePerProjects.Where(rp => rp.ProjectId == id && rp.UserId == user_id);
             if (!userRole.Any())
                 return NotFound();
-            
+
             userRole.First().RoleName = "Admin";
             _context.Entry(userRole.First()).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return project;
         }
-        
-        // transfer ownership
+
+        // transfer ownership: api/Projects/{id}/transferownership/{user_id}
         [HttpPost("{id}/transferownership/{user_id}")]
         public async Task<ActionResult<Project>> TransferOwnership(int id, string user_id)
         {
@@ -251,7 +251,7 @@ namespace TaskmanAPI.Controllers
 
             if (project == null)
             {
-                return NotFound();
+                return NotFound("Project not found.");
             }
 
             // check if user has privilege to transfer ownership
@@ -259,15 +259,15 @@ namespace TaskmanAPI.Controllers
                 && rp.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier) && rp.RoleName == "Owner");
             if (!privilege.Any())
                 return Forbid();
-            
+
             var newOwnerRole = _context.RolePerProjects.Where(rp => rp.ProjectId == id && rp.UserId == user_id);
             if (!newOwnerRole.Any())
                 return NotFound();
-            
+
             var oldOwnerRole = _context.RolePerProjects.Where(rp => rp.ProjectId == id && rp.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier));
             if (!oldOwnerRole.Any())
                 return NotFound();
-            
+
             oldOwnerRole.First().RoleName = "Admin";
             newOwnerRole.First().RoleName = "Owner";
             _context.Entry(oldOwnerRole.First()).State = EntityState.Modified;
@@ -275,8 +275,8 @@ namespace TaskmanAPI.Controllers
             await _context.SaveChangesAsync();
             return project;
         }
-        
-        // demote user to regular user
+
+        // demote user to regular user: api/projects/{id}/demoteuser/{user_id}
         [HttpPost("{id}/demoteuser/{user_id}")]
         public async Task<ActionResult<Project>> DemoteUser(int id, string user_id)
         {
@@ -284,7 +284,7 @@ namespace TaskmanAPI.Controllers
 
             if (project == null)
             {
-                return NotFound();
+                return NotFound("Project not found.");
             }
 
             // check if user has privilege to demote another user
@@ -292,11 +292,11 @@ namespace TaskmanAPI.Controllers
                 && rp.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier) && rp.RoleName == "Owner");
             if (!privilege.Any())
                 return Forbid();
-            
+
             var userRole = _context.RolePerProjects.Where(rp => rp.ProjectId == id && rp.UserId == user_id);
             if (!userRole.Any())
                 return NotFound();
-            
+
             userRole.First().RoleName = "User";
             _context.Entry(userRole.First()).State = EntityState.Modified;
             await _context.SaveChangesAsync();
