@@ -41,14 +41,18 @@ export class LoginComponent {
         const data = result;
         sessionStorage.setItem(this.accesToken,data.accessToken);
         sessionStorage.setItem(this.refreshToken,data.refreshToken);
-        console.log(sessionStorage.getItem(this.accesToken));
         form.reset();
         this.router.navigate(["/dashboard"]);
-      }, error => {
+        }, error => {
         console.error('Error occured');
 
       });
     }
+
+
+
+
+
 
   }
 }
