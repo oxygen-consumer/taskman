@@ -1,11 +1,14 @@
 ﻿<div class="container lg:w-2/3 mx-auto my-8 px-8 py-12 lg:px-8 bg-slate-100 rounded-md">
-  <p-table #dt [value]="data" dataKey="id" editMode="row">
+  <p-progressSpinner ariaLabel="loading" *ngIf="loading"/>
+
+  <p-table #dt [value]="data" dataKey="id" editMode="row" *ngIf="!loading">
     <ng-template pTemplate="header">
       <tr>
         <th>Index</th>
         <th>Name</th>
         <th>Description</th>
-        <th>Salvare</th>
+        <button (click)=onAddNewRow() [disabled]="!addRow"><i class="pi pi-plus" style="color: slateblue"></i></button>
+
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-row let-rowIndex="rowIndex" let-editing="editing">
@@ -52,7 +55,7 @@
                   pRipple
                   type="button"
                   pSaveEditableRow
-                  icon="pi pi-check"
+                  icon="pi pi-check" style="color: green"
                   (click)="onRowEditSave(row,rowIndex)"
                   class="p-button-rounded p-button-text p-button-success mr-2">
               </button>
@@ -62,7 +65,7 @@
                   type="button"
                   pCancelEditableRow
                   icon="pi pi-times"
-                  (click)="onRowEditCancel(row, rowIndex)"
+                  (click)="onRowEditCancel(row, rowIndex)" style="color: red"
                   class="p-button-rounded p-button-text p-button-danger">
               </button>
           </div>

@@ -24,6 +24,13 @@ export class ProjectService {
     });
     return this.http.put<any>(this.baseLink+"/api/Projects/" + id ,data,{headers} )
   }
+  addProject(data:any){
+    let token = this.service.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post<any>(this.baseLink+"/api/Projects/" ,data,{headers} )
+  }
 
 
 

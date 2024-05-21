@@ -7,6 +7,8 @@ import {FormsModule} from "@angular/forms";
 import {RippleModule} from "primeng/ripple";
 import {ButtonModule} from "primeng/button";
 import {NgIf} from "@angular/common";
+import {ProgressSpinnerModule} from "primeng/progressspinner";
+import {ToastModule} from "primeng/toast";
 
 
 @Component({
@@ -19,13 +21,16 @@ import {NgIf} from "@angular/common";
     FormsModule,
     RippleModule,
     ButtonModule,
-    NgIf
+    NgIf,
+    ProgressSpinnerModule,
+    ToastModule
   ],
   styleUrl: './projects.component.scss'
 })
 export class ProjectsComponent {
   data:any;
   token:any;
+  loading = true;
   @ViewChild('dt') table: Table;
   useTable:any;
   addRow:boolean = true;
@@ -38,15 +43,16 @@ export class ProjectsComponent {
    }
 
     ngOnInit(){
-      console.log("buna");
-      console.log(this.token);
-      this.service.getProjects(this.token).subscribe(result =>{
-        this.data = result;
-        console.log(result);
-      })
+      this.loading = true;
+      this.loadElements();
     }
 
-
+  loadElements(){
+    this.service.getProjects(this.token).subscribe(result =>{
+      this.data = result;
+      this.loading = false;
+    })
+  }
   onRowEditInit(row: any,index:any) {
     this.clonedRows[index] = {...this.data[index]};
     this.saveRow = "edit";
@@ -55,6 +61,7 @@ export class ProjectsComponent {
   }
 
   onRowEditSave(row: any,index:any) {
+    this.loading = true;
     if(this.saveRow == "edit"){
        const savedObject = {
           "id": row['id'],
@@ -63,24 +70,52 @@ export class ProjectsComponent {
         }
         console.log(savedObject);
         this.service.modifyProject(row["id"],savedObject).subscribe(result=>{
-            console.log(result);
 
+            this.loading = false;
            }, error => {
             console.error('Error occured');
-
+          this.loading = false;
             });
 
 
     }
-    this.addRow = true;
+    else{
+      const savedObject = {
+        "name": row['name'],
+        "description": row['description']
+      }
+      this.service.addProject(savedObject).subscribe(result=>{
+        this.loadElements();
+        this.loading = false;
+        }, error => {
+        console.error('Error occured');
+        this.loading = false;
+
+      });
+    }
+  this.addRow = true;
     delete this.clonedRows[index];
   }
 
   onRowEditCancel(row: any, rowIndex: any) {
-    this.data[rowIndex] = this.clonedRows[rowIndex];
-    delete this.clonedRows[rowIndex];
+    if(this.saveRow == "edit"){
+      this.data[rowIndex] = this.clonedRows[rowIndex];
+      delete this.clonedRows[rowIndex];
+    }
+    else{
+      this.data.shift();
+    }
     this.addRow = true;
   }
+
+  onAddNewRow() {
+    this.data.unshift({});
+    this.table?.initRowEdit({});
+    this.addRow = false;
+    this.saveRow = "add";
+  }
+
+
 }
 
 export interface Projects {
