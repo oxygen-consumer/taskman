@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import {Router, RouterOutlet} from '@angular/router';
 import {NgOptimizedImage} from "@angular/common";
 
 @Component({
@@ -11,4 +11,11 @@ import {NgOptimizedImage} from "@angular/common";
 })
 export class HeaderComponent {
   title = 'TaskmanClient';
+  constructor(private router: Router) {
+
+  }
+
+  onButtonClick() {
+    this.router.navigate(["/login"]);
+  }
 }
