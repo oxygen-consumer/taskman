@@ -1,9 +1,7 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TaskmanAPI.Contexts;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using TaskmanAPI.Model;
-using TaskmanAPI.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,10 +11,7 @@ builder.Services.AddAuthorizationBuilder();
 
 builder.Services.AddCors();
 
-builder.Services.AddControllers(options =>
-{
-    options.SuppressAsyncSuffixInActionNames = false;
-});
+builder.Services.AddControllers(options => { options.SuppressAsyncSuffixInActionNames = false; });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -39,7 +34,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    
+
     // cursed
     app.UseCors(builder => builder
         .AllowAnyOrigin()

@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.General;
 using TaskmanAPI.Model;
 using TaskmanAPI.Models;
 
@@ -17,28 +16,28 @@ public class DefaultContext : IdentityDbContext<User>
     public DbSet<Project> Projects { get; set; }
     public DbSet<ProjTask> ProjTasks { get; set; }
     public DbSet<RolePerProject> RolePerProjects { get; set; }
-    public DbSet<Notification> Notifications{ get; set; }
+    public DbSet<Notification> Notifications { get; set; }
 
     protected override void OnModelCreating(ModelBuilder
-       modelBuilder)
+        modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<RolePerProject>()
             .HasKey(ab => new { ab.UserId, ab.ProjectId });
-        
+
         //relatie one-to-many ( User-Notification )
         modelBuilder.Entity<Notification>()
-           .HasOne(t => t.User)
-           .WithMany(u => u.Notifications)
-           .HasForeignKey(t => t.UserId)
-           .OnDelete(DeleteBehavior.Restrict); 
+            .HasOne(t => t.User)
+            .WithMany(u => u.Notifications)
+            .HasForeignKey(t => t.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         //relatia one-to-many (Project-RolePerProject)
         modelBuilder.Entity<RolePerProject>()
-           .HasOne(t => t.Project)
-           .WithMany(t => t.RolePerProjects) // vectorul de RolePerProject din Project
-           .HasForeignKey(t => t.ProjectId);
+            .HasOne(t => t.Project)
+            .WithMany(t => t.RolePerProjects) // vectorul de RolePerProject din Project
+            .HasForeignKey(t => t.ProjectId);
 
         modelBuilder.Entity<RolePerProject>()
             .HasOne(t => t.User)
@@ -46,7 +45,7 @@ public class DefaultContext : IdentityDbContext<User>
             .HasForeignKey(t => t.UserId);
 
         /*keep this if needed in the future
-         * 
+         *
          * modelBuilder.Entity<Project>()
             .HasMany(t => t.RolePerProjects)
             .WithOne(t => t.Project)

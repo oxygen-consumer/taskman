@@ -1,27 +1,24 @@
-using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using TaskmanAPI.Models;
 
-namespace TaskmanAPI.Model
+namespace TaskmanAPI.Model;
+
+public class User : IdentityUser
 {
-    public class User : IdentityUser
-    {
-        // [Key]
-        // public String Id { get; set; }
-        // [Required(ErrorMessage = "Numele de utilizator este obligatoriu")]
-        // public string UserName { get; set; }
-        // [Required(ErrorMessage = "Parola este obligatorie")]
-        // public string Password { get; set; }
-        // [Required(ErrorMessage = "Adresa de email este obligatorie")]
-        // public string Email { get; set; }
+    // [Key]
+    // public String Id { get; set; }
+    // [Required(ErrorMessage = "Numele de utilizator este obligatoriu")]
+    // public string UserName { get; set; }
+    // [Required(ErrorMessage = "Parola este obligatorie")]
+    // public string Password { get; set; }
+    // [Required(ErrorMessage = "Adresa de email este obligatorie")]
+    // public string Email { get; set; }
 
 
-        //to add - notification, comment, reaction (?)
-        public ICollection<Notification> Notifications { get; set; }
-        public virtual ICollection<ProjTask>? Tasks { get; set; }
-        [JsonIgnore]
-        public virtual ICollection<RolePerProject>? RolePerProjects { get; set; }
-    }
+    //to add - notification, comment, reaction (?)
+    public ICollection<Notification> Notifications { get; set; }
+    public virtual ICollection<ProjTask>? Tasks { get; set; }
+
+    [JsonIgnore] public virtual ICollection<RolePerProject>? RolePerProjects { get; set; }
 }
