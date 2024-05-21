@@ -37,4 +37,13 @@
       <Folder Include="Authentication\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <UpToDateCheckInput Remove="Views\ProjTasks1\Create.cshtml" />
+      <UpToDateCheckInput Remove="Views\ProjTasks1\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Views\ProjTasks1\Details.cshtml" />
+      <UpToDateCheckInput Remove="Views\ProjTasks1\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Views\ProjTasks1\Index.cshtml" />
+      <UpToDateCheckInput Remove="Views\Shared\_ValidationScriptsPartial.cshtml" />
+    </ItemGroup>
+
 </Project>
