@@ -1,4 +1,4 @@
-﻿<div class="login-container flex sm:w-1/2 lg:w-1/3 xl:x-3/12 flex-col justify-center px-8 py-12 lg:px-8 bg-slate-100 rounded-md">
+﻿<div class="container px-8 py-12 lg:px-8 bg-slate-100 rounded-md">
   <p-table #dt [value]="data" dataKey="id" editMode="row">
     <ng-template pTemplate="header">
       <tr>
@@ -37,6 +37,7 @@
         <td>
           <div class="flex align-items-center justify-content-center gap-2">
               <button
+                *ngIf="!editing"
                 pButton
                 pRipple
                 type="button"
