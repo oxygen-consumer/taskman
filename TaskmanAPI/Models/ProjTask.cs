@@ -23,7 +23,7 @@ public class ProjTask
 
     //TO DO - status changes, comments
     [JsonIgnore]
-    public virtual ICollection<User>? Users { get; set; }
+    public virtual ICollection<User> Users { get; set; } = new List<User>();
 
     //subtasks
     //public virtual ICollection<ProjTask> ProjTasks { get; set; }

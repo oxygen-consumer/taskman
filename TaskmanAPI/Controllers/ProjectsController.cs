@@ -3,11 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Security.Claims;
 using TaskmanAPI.Contexts;
+using TaskmanAPI.Model;
 using TaskmanAPI.Models;
-
-/* TO DO
- * Add method for adding task to project that calls new for projtask
- */
 
 namespace TaskmanAPI.Controllers
 {
