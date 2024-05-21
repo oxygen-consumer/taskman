@@ -44,7 +44,7 @@ export class LoginComponent {
         console.log(sessionStorage.getItem(this.accesToken));
         form.reset();
         this.router.navigate(["/dashboard"]);
-        }, error => {
+      }, error => {
         console.error('Error occured');
 
       });
