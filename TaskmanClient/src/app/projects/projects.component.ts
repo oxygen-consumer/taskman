@@ -28,6 +28,8 @@ export class ProjectsComponent {
   token:any;
   @ViewChild('dt') table: Table;
   useTable:any;
+  addRow:boolean = true;
+  saveRow: string;
   clonedRows:{[s:string]:Projects} = {};
   accesToken = "acces_token";
   refreshToken = "refresh_token";
@@ -47,16 +49,37 @@ export class ProjectsComponent {
 
   onRowEditInit(row: any,index:any) {
     this.clonedRows[index] = {...this.data[index]};
+    this.saveRow = "edit";
+    this.addRow = false;
 
   }
 
   onRowEditSave(row: any,index:any) {
-    //momentan gol
+    if(this.saveRow == "edit"){
+       const savedObject = {
+          "id": row['id'],
+          "name": row['name'],
+          "description": row['description']
+        }
+        console.log(savedObject);
+        this.service.modifyProject(row["id"],savedObject).subscribe(result=>{
+            console.log(result);
+
+           }, error => {
+            console.error('Error occured');
+
+            });
+
+
+    }
+    this.addRow = true;
+    delete this.clonedRows[index];
   }
 
   onRowEditCancel(row: any, rowIndex: any) {
     this.data[rowIndex] = this.clonedRows[rowIndex];
     delete this.clonedRows[rowIndex];
+    this.addRow = true;
   }
 }
 
