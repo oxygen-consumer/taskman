@@ -6,16 +6,13 @@ namespace TaskmanAPI.Models;
 
 public class Project
 {
-    [Key]
-    public int Id { get; set; }
+    [Key] public int Id { get; set; }
+
     public string Name { get; set; }
 
     public string Description { get; set; }
 
-    [JsonIgnore]
-    public ICollection<RolePerProject>? RolePerProjects { get; set; }
+    [JsonIgnore] public ICollection<RolePerProject>? RolePerProjects { get; set; }
 
-    [JsonIgnore]
-    public ICollection<ProjTask>? Task {  get; set; }
-  
+    [JsonIgnore] public ICollection<ProjTask>? Task { get; set; }
 }
