@@ -1,20 +1,54 @@
-import { Component } from '@angular/core';
-import {RouterLink, RouterOutlet} from '@angular/router';
-import {FormsModule} from "@angular/forms";
+import {Component, ElementRef, ViewChild, ViewChildren} from '@angular/core';
+import {Router, RouterLink, RouterOutlet} from '@angular/router';
+import {FormBuilder, FormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators} from "@angular/forms";
+import {LoginServiceService} from "../service/login-service.service";
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [RouterOutlet, FormsModule, RouterLink],
+  imports: [RouterOutlet, FormsModule, RouterLink, ReactiveFormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-  username: any;
-  password: any;
+  registerForm: FormGroup;
+  title: any;
+  password: string | undefined;
+  email: string | undefined;
+  accesToken = "acces_token";
+  refreshToken = "refresh_token";
+  @ViewChild('loginForm') myForm!: NgForm;
 
-  login() {
-    console.log('Username:', this.username);
-    console.log('Password:', this.password);
+
+  constructor(private fb: FormBuilder, private loginService: LoginServiceService , private router:Router) {
+    this.registerForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required]],
+    });
+  }
+
+  login(form:any) {
+    console.log(form);
+    const email = form.value.email;
+    const password = form.value.password;
+    const values = {
+      'email': email,
+      'password': password,
+    };
+
+    if(this.registerForm.valid){
+      this.loginService.onLogin(values).subscribe(result => {
+        const data = result;
+        sessionStorage.setItem(this.accesToken,data.accessToken);
+        sessionStorage.setItem(this.refreshToken,data.refreshToken);
+        console.log(sessionStorage.getItem(this.accesToken));
+        form.reset();
+        this.router.navigate(["/dashboard"]);
+      }, error => {
+        console.error('Error occured');
+
+      });
+    }
+
   }
 }

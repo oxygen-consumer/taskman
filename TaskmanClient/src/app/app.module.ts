@@ -8,6 +8,7 @@ import {LoginComponent} from "./login/login.component";
 import {HeaderComponent} from "./header/header.component";
 import {HttpClientModule} from "@angular/common/http";
 import {LoginServiceService} from "./service/login-service.service";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 
 
@@ -28,6 +29,8 @@ import {LoginServiceService} from "./service/login-service.service";
     HeaderComponent,
     AppComponent,
     HttpClientModule,
+    BrowserModule,
+    BrowserAnimationsModule,
 
   ]
 })
