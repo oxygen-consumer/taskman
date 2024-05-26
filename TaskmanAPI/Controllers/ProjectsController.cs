@@ -278,6 +278,22 @@ public class ProjectsController : Controller
         return project;
     }
 
+    // get current user's role in project: api/projects/{id}/myrole
+    [HttpGet("{id}/myrole")]
+    public async Task<ActionResult<string>> MyRole(int id)
+    {
+        var project = await _context.Projects.FindAsync(id);
+
+        if (project == null) return NotFound("Project not found.");
+
+        var userRole = _context.RolePerProjects.Where(rp =>
+            rp.ProjectId == id && rp.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier));
+        if (!userRole.Any())
+            return NotFound();
+
+        return userRole.First().RoleName;
+    }
+
     private bool ProjectExists(int id)
     {
         return _context.Projects.Any(e => e.Id == id);
