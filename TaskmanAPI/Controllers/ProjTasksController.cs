@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TaskmanAPI.Contexts;
+using TaskmanAPI.Enums;
 using TaskmanAPI.Model;
+using TaskmanAPI.Services;
 
 namespace TaskmanAPI.Controllers;
 
@@ -11,10 +13,12 @@ namespace TaskmanAPI.Controllers;
 public class ProjTasksController : ControllerBase
 {
     private readonly DefaultContext _context;
+    private readonly PrivilegeChecker _privilegeChecker;
 
     public ProjTasksController(DefaultContext context)
     {
         _context = context;
+        _privilegeChecker = new PrivilegeChecker(_context, User);
     }
 
     // GET: api/ProjTasks/getprojtask/{projectId}
@@ -24,12 +28,8 @@ public class ProjTasksController : ControllerBase
         //show all project tasks that belong to current user and are in the projectId project
         var userid = User.FindFirstValue(ClaimTypes.NameIdentifier);
         var tasks = new List<ProjTask>();
-        var privilege = await _context.RolePerProjects.Where(rp => rp.ProjectId == projectId
-                                                                   && rp.UserId ==
-                                                                   User.FindFirstValue(ClaimTypes.NameIdentifier)
-                                                                   && (rp.RoleName == "Owner" ||
-                                                                       rp.RoleName == "Admin")).ToListAsync();
-
+        bool isAdmin = _privilegeChecker.HasPrivilege(projectId, Role.Admin);
+        
         var projectTasks = await _context.ProjTasks.Where(t => t.ProjectId == projectId).ToListAsync();
 
         foreach (var t in projectTasks)
@@ -41,9 +41,9 @@ public class ProjTasksController : ControllerBase
                 tasks.Add(t);
                 continue;
             }
+            
             //if user is admin or owner then they can see task anyway
-
-            if (privilege.Any()) tasks.Add(t);
+            if (isAdmin) tasks.Add(t);
         }
 
         return tasks;
@@ -57,14 +57,9 @@ public class ProjTasksController : ControllerBase
 
         if (projTask == null) return NotFound();
 
-        var privilege = _context.RolePerProjects.Where(rp => rp.ProjectId == projTask.ProjectId
-                                                             && rp.UserId ==
-                                                             User.FindFirstValue(ClaimTypes.NameIdentifier)
-                                                             && (rp.RoleName == "Owner" || rp.RoleName == "Admin"));
-
         //assigned users, admins and the owner can see task
         if ((projTask.Users != null && projTask.Users.Any(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier)))
-            || privilege.Any())
+            || _privilegeChecker.HasPrivilege(projTask.ProjectId, Role.Admin))
             return projTask;
 
         return Forbid();
@@ -77,9 +72,7 @@ public class ProjTasksController : ControllerBase
         if (id != projTask.Id) return BadRequest();
 
         //owner and admins can edit tasks
-        if (!_context.RolePerProjects.Any(rp => rp.ProjectId == projTask.ProjectId
-                                                && rp.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier)
-                                                && (rp.RoleName == "Owner" || rp.RoleName == "Admin")))
+        if (!_privilegeChecker.HasPrivilege(projTask.ProjectId, Role.Admin))
             return Forbid();
 
         _context.Entry(projTask).State = EntityState.Modified;
@@ -106,12 +99,7 @@ public class ProjTasksController : ControllerBase
 
         if (project == null) return NotFound("Project not found.");
 
-        var privilege = _context.RolePerProjects.Where(rp => rp.ProjectId == projId
-                                                             && rp.UserId ==
-                                                             User.FindFirstValue(ClaimTypes.NameIdentifier)
-                                                             && (rp.RoleName == "Owner" || rp.RoleName == "Admin"));
-
-        if (!privilege.Any())
+        if (!_privilegeChecker.HasPrivilege(projId, Role.Admin))
             return Forbid();
 
         projTask.ProjectId = projId;
@@ -130,12 +118,7 @@ public class ProjTasksController : ControllerBase
         var projTask = await _context.ProjTasks.FindAsync(id);
         if (projTask == null) return NotFound();
 
-        var privilege = _context.RolePerProjects.Where(rp => rp.ProjectId == projTask.ProjectId
-                                                             && rp.UserId ==
-                                                             User.FindFirstValue(ClaimTypes.NameIdentifier)
-                                                             && (rp.RoleName == "Owner" || rp.RoleName == "Admin"));
-
-        if (!privilege.Any())
+        if (!_privilegeChecker.HasPrivilege(projTask.ProjectId, Role.Admin))
             return Forbid();
 
         _context.ProjTasks.Remove(projTask);
@@ -162,12 +145,7 @@ public class ProjTasksController : ControllerBase
         if (user == null)
             return BadRequest("User doesn't exist.");
 
-        var privilege = _context.RolePerProjects.Where(rp => rp.ProjectId == ptask.ProjectId
-                                                             && rp.UserId ==
-                                                             User.FindFirstValue(ClaimTypes.NameIdentifier)
-                                                             && (rp.RoleName == "Owner" || rp.RoleName == "Admin"));
-
-        if (!privilege.Any())
+        if (!_privilegeChecker.HasPrivilege(ptask.ProjectId, Role.Admin))
             return Forbid();
         /*
         foreach (var uid in userIdsList)

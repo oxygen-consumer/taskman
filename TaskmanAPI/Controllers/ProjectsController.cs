@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TaskmanAPI.Contexts;
+using TaskmanAPI.Enums;
 using TaskmanAPI.Models;
+using TaskmanAPI.Services;
 
 namespace TaskmanAPI.Controllers;
 
@@ -11,10 +13,12 @@ namespace TaskmanAPI.Controllers;
 public class ProjectsController : Controller
 {
     private readonly DefaultContext _context;
+    private readonly PrivilegeChecker _privilegeChecker;
 
     public ProjectsController(DefaultContext context)
     {
         _context = context;
+        _privilegeChecker = new PrivilegeChecker(_context, User);
     }
 
     // GET: api/Projects
@@ -50,8 +54,7 @@ public class ProjectsController : Controller
         if (project == null) return NotFound();
 
         //if user has role in project, then they're in it
-        if (_context.RolePerProjects.Any(rp => rp.ProjectId == id
-                                               && rp.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier)))
+        if (_privilegeChecker.HasPrivilege(id, Role.User))
             return project;
 
         return Forbid();
@@ -65,9 +68,7 @@ public class ProjectsController : Controller
         if (id != project.Id) return BadRequest();
 
         //owner or admins can edit project
-        if (!_context.RolePerProjects.Any(rp => rp.ProjectId == id
-                                                && rp.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier)
-                                                && (rp.RoleName == "Owner" || rp.RoleName == "Admin")))
+        if (!_privilegeChecker.HasPrivilege(id, Role.Admin))
             return Forbid();
 
         _context.Entry(project).State = EntityState.Modified;
@@ -121,12 +122,7 @@ public class ProjectsController : Controller
         if (project == null) return NotFound();
 
         //only the owner can delete the project
-        var privilege = _context.RolePerProjects.Where(rp => rp.ProjectId == id
-                                                             && rp.UserId ==
-                                                             User.FindFirstValue(ClaimTypes.NameIdentifier) &&
-                                                             rp.RoleName == "Owner");
-
-        if (!privilege.Any())
+        if (!_privilegeChecker.HasPrivilege(id, Role.Owner))
             return Forbid();
 
         _context.Projects.Remove(project);
@@ -148,12 +144,7 @@ public class ProjectsController : Controller
 
 
         // check if user has privilege to add another user
-        // TODO: we should move the privilege check to a separate function (maybe even a service)
-        var privilege = _context.RolePerProjects.Where(rp => rp.ProjectId == id
-                                                             && rp.UserId ==
-                                                             User.FindFirstValue(ClaimTypes.NameIdentifier) &&
-                                                             (rp.RoleName == "Owner" || rp.RoleName == "Admin"));
-        if (!privilege.Any())
+        if (!_privilegeChecker.HasPrivilege(id, Role.Admin))
             return Forbid();
 
         var NewUserRole = new RolePerProject(user_id, id, "User");
@@ -175,13 +166,8 @@ public class ProjectsController : Controller
         if (project == null) return NotFound("Project not found.");
 
         // check if user has privilege to remove another user
-        var privilege = _context.RolePerProjects.Where(rp => rp.ProjectId == id
-                                                             && rp.UserId ==
-                                                             User.FindFirstValue(ClaimTypes.NameIdentifier) &&
-                                                             (rp.RoleName == "Owner" || rp.RoleName == "Admin"));
-
         // a user should be able to remove himself from a project
-        if (!privilege.Any() && user_id != User.FindFirstValue(ClaimTypes.NameIdentifier))
+        if (_privilegeChecker.HasPrivilege(id, Role.Admin) && user_id != User.FindFirstValue(ClaimTypes.NameIdentifier))
             return Forbid();
 
         var userRole = _context.RolePerProjects.Where(rp => rp.ProjectId == id && rp.UserId == user_id);
@@ -202,11 +188,7 @@ public class ProjectsController : Controller
         if (project == null) return NotFound("Project not found.");
 
         // check if user has privilege to promote another user
-        var privilege = _context.RolePerProjects.Where(rp => rp.ProjectId == id
-                                                             && rp.UserId ==
-                                                             User.FindFirstValue(ClaimTypes.NameIdentifier) &&
-                                                             rp.RoleName == "Owner");
-        if (!privilege.Any())
+        if (!_privilegeChecker.HasPrivilege(id, Role.Owner))
             return Forbid();
 
         var userRole = _context.RolePerProjects.Where(rp => rp.ProjectId == id && rp.UserId == user_id);
@@ -228,11 +210,7 @@ public class ProjectsController : Controller
         if (project == null) return NotFound("Project not found.");
 
         // check if user has privilege to transfer ownership
-        var privilege = _context.RolePerProjects.Where(rp => rp.ProjectId == id
-                                                             && rp.UserId ==
-                                                             User.FindFirstValue(ClaimTypes.NameIdentifier) &&
-                                                             rp.RoleName == "Owner");
-        if (!privilege.Any())
+        if (!_privilegeChecker.HasPrivilege(id, Role.Owner))
             return Forbid();
 
         var newOwnerRole = _context.RolePerProjects.Where(rp => rp.ProjectId == id && rp.UserId == user_id);
@@ -261,11 +239,7 @@ public class ProjectsController : Controller
         if (project == null) return NotFound("Project not found.");
 
         // check if user has privilege to demote another user
-        var privilege = _context.RolePerProjects.Where(rp => rp.ProjectId == id
-                                                             && rp.UserId ==
-                                                             User.FindFirstValue(ClaimTypes.NameIdentifier) &&
-                                                             rp.RoleName == "Owner");
-        if (!privilege.Any())
+        if (!_privilegeChecker.HasPrivilege(id, Role.Owner))
             return Forbid();
 
         var userRole = _context.RolePerProjects.Where(rp => rp.ProjectId == id && rp.UserId == user_id);
