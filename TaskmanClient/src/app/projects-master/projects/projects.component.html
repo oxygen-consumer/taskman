@@ -9,7 +9,7 @@
         <th class="px-4 py-2">Name</th>
         <th class="px-4 py-2">Description</th>
         <th></th>
-        <button (click)=onAddNewRow() *ngIf="editable" [disabled]="!addRow"  class="w-6 rounded-full bg-indigo-500 hover:bg-indigo-400 transition duration-200"><i class="pi pi-plus" ></i></button>
+        <button (click)=onAddNewRow()  [disabled]="!addRow"  class="w-6 rounded-full bg-indigo-500 hover:bg-indigo-400 transition duration-200"><i class="pi pi-plus" ></i></button>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-row let-rowIndex="rowIndex" let-editing="editing">
@@ -38,11 +38,11 @@
           </p-cellEditor>
         </td>
 
-        <td class="px-4 py-2" *ngIf="editable">
+        <td class="px-4 py-2" >
           <div class="flex items-center justify-center gap-2 ">
               <button
 
-                *ngIf="!editing"
+                *ngIf="!editing && editable"
                 pButton
                 pRipple
                 type="button"
