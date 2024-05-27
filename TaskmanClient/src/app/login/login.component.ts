@@ -2,12 +2,11 @@ import {Component, ElementRef, ViewChild, ViewChildren} from '@angular/core';
 import {Router, RouterLink, RouterOutlet} from '@angular/router';
 import {FormBuilder, FormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators} from "@angular/forms";
 import {LoginServiceService} from "../service/login-service.service";
-import {CalendarModule} from "primeng/calendar";
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [RouterOutlet, FormsModule, RouterLink, ReactiveFormsModule, CalendarModule],
+  imports: [RouterOutlet, FormsModule, RouterLink, ReactiveFormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
@@ -18,8 +17,6 @@ export class LoginComponent {
   email: string | undefined;
   accesToken = "acces_token";
   refreshToken = "refresh_token";
-  userEmail = "user_email";
-  date = new Date();
   @ViewChild('loginForm') myForm!: NgForm;
 
 
@@ -44,7 +41,6 @@ export class LoginComponent {
         const data = result;
         sessionStorage.setItem(this.accesToken,data.accessToken);
         sessionStorage.setItem(this.refreshToken,data.refreshToken);
-        sessionStorage.setItem(this.userEmail,values.email);
         form.reset();
         this.router.navigate(["/dashboard"]);
       }, error => {

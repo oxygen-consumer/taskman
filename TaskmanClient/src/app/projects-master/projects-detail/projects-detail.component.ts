@@ -5,14 +5,10 @@ import {InputTextModule} from "primeng/inputtext";
 import {FormsModule} from "@angular/forms";
 import {RippleModule} from "primeng/ripple";
 import {ButtonModule} from "primeng/button";
-import {DatePipe, NgIf} from "@angular/common";
+import {NgIf} from "@angular/common";
 import {ProgressSpinnerModule} from "primeng/progressspinner";
 import {ToastModule} from "primeng/toast";
-import {LoginServiceService} from "../../service/login-service.service";
-import {TaskService} from "../../service/task-service.service";
-import {CalendarModule} from "primeng/calendar";
-import {BrowserModule} from "@angular/platform-browser";
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 @Component({
   selector: 'app-projects-detail',
@@ -26,14 +22,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     ButtonModule,
     NgIf,
     ProgressSpinnerModule,
-    ToastModule,
-    CalendarModule,
+    ToastModule
   ],
   styleUrl: './projects-detail.component.scss'
 })
 export class ProjectsDetailComponent {
   @Input() row:any;
-  cloneRow:any;
   @Output() emitter = new EventEmitter<any>();
   data:any;
   token:any;
@@ -45,59 +39,21 @@ export class ProjectsDetailComponent {
   clonedRows:{[s:string]:Projects} = {};
   accesToken = "acces_token";
   refreshToken = "refresh_token";
-  editable:boolean = true;
-  editProject:boolean = false;
-  email:string|null;
-  userEmail: string|null;
+  editable:boolean = false;
 
-  constructor(private service:TaskService , private loginService:LoginServiceService, private projectService:ProjectService){
+  constructor(private service:ProjectService){
     this.token = sessionStorage.getItem(this.accesToken);
    }
 
     ngOnInit(){
       this.loading = true;
-      this.email = this.loginService.getEmail();
       this.loadElements();
     }
 
-   initEditTask(){
-    this.editProject = true;
-    this.cloneRow = {...this.row};
-   }
-
-   editCancel(){
-    this.row = this.cloneRow;
-    this.editProject = false;
-    delete this.cloneRow;
-   }
-   saveTask(){
-     const savedObject = {
-       "id": this.row['id'],
-       "name": this.row['name'],
-       "description": this.row['description']
-     }
-     this.service.modifyTasks(this.row["id"],savedObject).subscribe(()=>{
-       delete this.cloneRow;
-       this.editProject = false;
-
-     }, () => {
-       console.error('Obiect gol sau invalid');
-       this.row = this.cloneRow;
-       this.editProject = false;
-       delete this.cloneRow;
-     });
-
-
-   }
   loadElements(){
-    this.service.getTasks(this.token,this.row.id).subscribe(result =>{
+    this.service.getProjects(this.token).subscribe(result =>{
       this.data = result;
-      this.data.forEach((row: { deadline: string | number | Date; }) =>{
-        row.deadline = new Date(row.deadline);
-      });
       this.loading = false;
-    },error => {
-      console.log(error);
     })
   }
   onRowEditInit(row: any,index:any) {
@@ -111,19 +67,18 @@ export class ProjectsDetailComponent {
     this.loading = true;
     if(this.saveRow == "edit"){
        const savedObject = {
-         "id":row['id'],
-         "projectId": this.row['id'],
-          "title": row['title'],
-          "description": row['description'],
-          "deadline":row['deadline']
+          "id": row['id'],
+          "name": row['name'],
+          "description": row['description']
         }
         console.log(savedObject);
-        this.service.modifyTasks(row["id"],savedObject).subscribe(()=>{
+        this.service.modifyProject(row["id"],savedObject).subscribe(()=>{
 
             this.loading = false;
             this.addRow = true;
            }, () => {
             console.error('Obiect gol sau invalid');
+            this.data.shift();
             this.addRow = true;
             this.loading = false;
             });
@@ -132,13 +87,11 @@ export class ProjectsDetailComponent {
     }
     else{
       const savedObject = {
-        "projectId": this.row['id'],
-        "title": row['title'],
-        "description": row['description'],
-        "deadline":row['deadline']
+        "name": row['name'],
+        "description": row['description']
       }
 
-      this.service.addTasks(savedObject).subscribe(result=>{
+      this.service.addProject(savedObject).subscribe(result=>{
         this.loadElements();
         this.loading = false;
         this.addRow = true;
@@ -175,46 +128,7 @@ export class ProjectsDetailComponent {
     this.emitter.emit("back");
   }
 
-
-  onAddUser(username: any){
-    this.projectService.addUser(this.row.id,username).subscribe(()=>{
-    }, () => {
-      console.error('Input gol sau invalid');
-    });
-  }
-
-  onRemoveUser(username: any){
-    this.projectService.removeUser(this.row.id,username).subscribe(()=>{
-    }, () => {
-      console.error('Input gol sau invalid');
-    });
-  }
-
-  onPromoteUser(username: any){
-    this.projectService.promoteUser(this.row.id,username).subscribe(()=>{
-    }, () => {
-      console.error('Input gol sau invalid');
-    });
-  }
-
-  onDemoteUser(username: any){
-    this.projectService.demoteUser(this.row.id,username).subscribe(()=>{
-    }, () => {
-      console.error('Input gol sau invalid');
-    });
-  }
-
-  onTransferOwnership(username: any){
-    this.projectService.transferOwnership(this.row.id,username).subscribe(()=>{
-    }, () => {
-      console.error('Input gol sau invalid');
-    });
-  }
-
-
 }
-
-
 
 export interface Projects {
   name?: string;

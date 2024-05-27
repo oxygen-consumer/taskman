@@ -1,115 +1,91 @@
-﻿<div class="container mx-auto my-10 p-8 bg-slate-100 rounded-lg shadow-2xl">
-  <!-- User Email -->
-  <div class="mb-6">
-    <div class="inline-block bg-gray-200 rounded-full px-6 py-2 text-lg font-bold text-gray-700 shadow-md">
-      User Email: <span class="text-indigo-600">{{ email }}</span>
-    </div>
-  </div>
+﻿<h3><b><input type="text" pInputText [(ngModel)]="this.row.name" /></b></h3>
+<br>
+<input type="text" pInputText [(ngModel)]="this.row.description"/>
+<div class="container lg:w-2/3 mx-auto my-8 px-8 py-12 lg:px-8 bg-slate-100 rounded-md">
+  <p-progressSpinner ariaLabel="loading" *ngIf="loading" class="flex justify-center my-4"/>
 
-  <div class="container mx-auto my-10 p-8 bg-white rounded-lg shadow-2xl">
-    <div class="mb-8">
-      <div class="flex flex-col md:flex-row gap-4">
-        <div class="flex flex-col bg-gray-100 p-4 rounded-md shadow-md">
-          <label class="text-lg text-center font-bold text-gray-700 mb-2">Project ID:</label>
-          <p class="text-2xl text-center font-bold text-indigo-600"><span class="text-indigo-600">#</span>{{row.id}}</p>
-        </div>
-        <div class="flex flex-col w-full md:w-auto flex-1">
-          <div class=" mb-4">
-            <h3 class="text-4xl  font-extrabold text-gray-900 ">
-              <input [disabled]="!editProject" type="text" pInputText [(ngModel)]="row.name" class="w-full border-b-2 border-gray-300 focus:border-indigo-600 focus:outline-none p-2" placeholder="Project Name"/>
-            </h3>
+  <p-table #dt [value]="data" dataKey="id" editMode="row" *ngIf="!loading" class="w-full">
+    <ng-template pTemplate="header">
+      <tr class=" text-white rounded-full">
+        <th class="px-4 py-2">Index</th>
+        <th class="px-4 py-2">Name</th>
+        <th class="px-4 py-2">Description</th>
+        <button (click)=onAddNewRow() *ngIf="editable" [disabled]="!addRow"  class="w-6 rounded-full bg-indigo-500 hover:bg-indigo-400 transition duration-200"><i class="pi pi-plus" ></i></button>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-row let-rowIndex="rowIndex" let-editing="editing">
+      <tr [pEditableRow]="row" class="hover:bg-indigo-100 transition duration-200">
+        <td class="px-4 py-2">{{rowIndex+1}}</td>
+
+        <td class="px-4 py-2">
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText type="text" [(ngModel)]="row.name"  required class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ row.name }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText type="text" [(ngModel)]="row.description" required class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ row.description }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+
+        <td class="px-4 py-2" *ngIf="editable">
+          <div class="flex items-center justify-center gap-2 ">
+              <button
+
+                *ngIf="!editing"
+                pButton
+                pRipple
+                type="button"
+                pInitEditableRow
+                icon="pi pi-pencil"
+                (click)="onRowEditInit(row, rowIndex)"
+                class="p-button-rounded p-button-text text-indigo-700 hover:text-indigo-300 transition duration-200">
+              </button>
+              <button
+                  *ngIf="editing"
+                  pButton
+                  pRipple
+                  type="button"
+                  pSaveEditableRow
+                  icon="pi pi-check"
+                  (click)="onRowEditSave(row,rowIndex)"
+                  class="w-1/2 p-button-rounded p-button-text p-button-success text-green-700 hover:text-green-400 transition duration-200">
+              </button>
+              <button
+                  *ngIf="editing"
+                  pButton pRipple
+                  type="button"
+                  pCancelEditableRow
+                  icon="pi pi-times"
+                  (click)="onRowEditCancel(row, rowIndex)"
+                  class="w-1/2 p-button-rounded p-button-text p-button-danger text-red-700 hover:text-red-400 transition duration-200">
+              </button>
           </div>
-          <div class="flex items-center">
-            <input [disabled]="!editProject" type="text" pInputText [(ngModel)]="row.description" class="w-full border-b-2 border-gray-300 focus:border-indigo-600 focus:outline-none p-2" placeholder="Project Description"/>
-            <div>
-              <button *ngIf="!editProject" pButton pRipple type="button" (click)="initEditTask()" icon="pi pi-pencil" class="p-button-rounded border-2 border-blue-300 bg-blue-100 w-[3rem] p-button-text text-indigo-700 hover:text-indigo-300 transition duration-200 "></button>
-            </div>
-            <div *ngIf="editProject" class="flex gap-2 ml-4">
-              <button pButton pRipple type="button" (click)="saveTask()" icon="pi pi-check" class="p-button-rounded border-2 border-green-300 bg-green-100 p-button-text p-button-success text-green-700 hover:text-green-400 transition duration-200"></button>
-              <button pButton pRipple type="button" (click)="editCancel()" icon="pi pi-times" class="p-button-rounded border-2 border-red-300 bg-red-100 p-button-text p-button-danger text-red-700 hover:text-red-400 transition duration-200"></button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+        </td>
 
-    <!-- User Management Buttons -->
-    <div class="flex gap-4 mb-10 justify-center lg:flex-row flex-col">
-      <input type="text" pInputText [(ngModel)]="this.userEmail" class="px-6 py-3 border-b-2 border-gray-300 focus:border-indigo-600 focus:outline-none p-2" placeholder="User Email"/>
-      <button pButton pRipple type="button" (click) = "onAddUser(this.userEmail)" class="px-6 py-3 bg-gradient-to-r from-green-400 to-green-600 text-white rounded-full shadow-md transform transition duration-300 hover:scale-105 hover:shadow-xl">Add User</button>
-      <button pButton pRipple type="button" (click) = "onRemoveUser(this.userEmail)" class="px-6 py-3 bg-gradient-to-r from-red-400 to-red-600 text-white rounded-full shadow-md transform transition duration-300 hover:scale-105 hover:shadow-xl">Remove User</button>
-      <button pButton pRipple type="button" (click) = "onPromoteUser(this.userEmail)" class="px-6 py-3 bg-gradient-to-r from-blue-400 to-blue-600 text-white rounded-full shadow-md transform transition duration-300 hover:scale-105 hover:shadow-xl">Promote User</button>
-      <button pButton pRipple type="button" (click) = "onDemoteUser(this.userEmail)" class="px-6 py-3 bg-gradient-to-r from-yellow-400 to-yellow-600 text-white rounded-full shadow-md transform transition duration-300 hover:scale-105 hover:shadow-xl">Demote User</button>
-      <button pButton pRipple type="button" (click) = "onTransferOwnership(this.userEmail)" class="px-6 py-3 bg-gradient-to-r from-purple-400 to-purple-600 text-white rounded-full shadow-md transform transition duration-300 hover:scale-105 hover:shadow-xl">Transfer Ownership</button>
-    </div>
 
-    <div class="lg:w-3/4 mx-auto px-8 py-10 bg-slate-100 rounded-md shadow-lg">
-      <p-progressSpinner ariaLabel="loading" *ngIf="loading" class="flex justify-center my-6"/>
+      </tr>
+    </ng-template>
+  </p-table>
 
-      <p-table #dt [value]="data" dataKey="id" editMode="row" *ngIf="!loading" class="w-full border-separate border-spacing-y-2">
-        <ng-template pTemplate="header">
-          <tr class=" text-white rounded-t-md">
-            <th class="px-4 py-2">Index</th>
-            <th class="px-4 py-2">Name</th>
-            <th class="px-4 py-2">Description</th>
-            <th class="px-4 py-2">Deadline</th>
-            <button (click)="onAddNewRow()" [disabled]="!addRow" class="w-6 rounded-full bg-indigo-500 hover:bg-indigo-400 transition duration-200"><i class="pi pi-plus"></i></button>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-row let-rowIndex="rowIndex" let-editing="editing">
-          <tr [pEditableRow]="row" class="hover:bg-indigo-100 transition duration-200 rounded-md bg-white">
-            <td class="px-4 py-3">{{rowIndex + 1}}</td>
-
-            <td class="px-4 py-3">
-              <p-cellEditor>
-                <ng-template pTemplate="input">
-                  <input pInputText type="text" [(ngModel)]="row.title" required class="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
-                </ng-template>
-                <ng-template pTemplate="output">
-                  {{ row.title }}
-                </ng-template>
-              </p-cellEditor>
-            </td>
-
-            <td class="px-4 py-3">
-              <p-cellEditor>
-                <ng-template pTemplate="input">
-                  <input pInputText type="text" [(ngModel)]="row.description" required class="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
-                </ng-template>
-                <ng-template pTemplate="output">
-                  {{ row.description }}
-                </ng-template>
-              </p-cellEditor>
-            </td>
-
-            <td>
-              <p-cellEditor>
-                <ng-template pTemplate="input">
-                  <p-calendar [(ngModel)]="row.deadline" appendTo = "body" dateFormat="mm/dd/yy"></p-calendar>
-                </ng-template>
-                <ng-template pTemplate="output">
-                  {{ row.deadline}}
-                </ng-template>
-              </p-cellEditor>
-            </td>
-
-            <!-- Table Action Buttons -->
-            <td class="px-4 py-3">
-              <div class="flex items-center justify-center gap-3">
-                <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil" (click)="onRowEditInit(row, rowIndex)" class="p-button-rounded p-button-text text-indigo-700 hover:text-indigo-300 transition duration-200"></button>
-                <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check" (click)="onRowEditSave(row,rowIndex)" class="w-1/2 p-button-rounded p-button-text p-button-success text-green-700 hover:text-green-400 transition duration-200"></button>
-                <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times" (click)="onRowEditCancel(row, rowIndex)" class="w-1/2 p-button-rounded p-button-text p-button-danger text-red-700 hover:text-red-400 transition duration-200"></button>
-              </div>
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
-    </div>
-
-    <div class="flex justify-center mt-10">
-      <button pButton pRipple type="button" (click)="back()" class="max-w-[10rem] px-6 py-3 bg-gradient-to-r from-purple-400 to-indigo-600 text-white rounded-full shadow-lg transform transition duration-300 hover:scale-105 hover:shadow-xl">
-        ← Back
-      </button>
-    </div>
-  </div>
 </div>
+<button
+  pButton
+  pRipple
+  type="button"
+  (click)="back()"
+  class="w-1/2 p-button-rounded p-button-text p-button-success text-green-700 hover:text-green-400 transition duration-200">
+  Back
+</button>
+
