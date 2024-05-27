@@ -9,6 +9,7 @@ export class LoginServiceService {
 
   accesToken = "acces_token";
   refreshToken = "refresh_token";
+  userEmail = "user_email";
   constructor(private http:HttpClient) { }
 
   onLogin(data: any): Observable<any> {
@@ -21,6 +22,10 @@ export class LoginServiceService {
 
   logout(): void {
     sessionStorage.removeItem(this.accesToken);
+  }
+
+  getEmail():string|null{
+    return sessionStorage.getItem(this.userEmail);
   }
 
   getToken(): Observable<string | null> {
