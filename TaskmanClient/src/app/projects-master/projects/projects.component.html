@@ -1,5 +1,5 @@
 ﻿
-<div class="container lg:w-2/3 mx-auto my-8 px-8 py-12 lg:px-8 bg-slate-100 rounded-md">
+<div class="lg:w-2/3 mx-auto my-8 px-8 py-12 lg:px-8 bg-slate-100 rounded-md">
   <p-progressSpinner ariaLabel="loading" *ngIf="loading" class="flex justify-center my-4"/>
 
   <p-table #dt [value]="data" dataKey="id" editMode="row" *ngIf="!loading" class="w-full">
@@ -8,6 +8,7 @@
         <th class="px-4 py-2">Index</th>
         <th class="px-4 py-2">Name</th>
         <th class="px-4 py-2">Description</th>
+        <th></th>
         <button (click)=onAddNewRow() *ngIf="editable" [disabled]="!addRow"  class="w-6 rounded-full bg-indigo-500 hover:bg-indigo-400 transition duration-200"><i class="pi pi-plus" ></i></button>
       </tr>
     </ng-template>
@@ -75,9 +76,9 @@
           <button
             pButton pRipple
             type="button"
-            icon="pi pi-eye"
+            icon="pi pi-eye text-xl"
             (click)="sendRow(row)"
-            class="w-1/2 p-button-rounded p-button-text p-button-danger text-blue-700 hover:text-blue-400 transition duration-200">
+            class="p-button-rounded left-1 p-button-text text-blue-700 hover:text-blue-400 transition duration-200">
           </button>
         </td>
 
