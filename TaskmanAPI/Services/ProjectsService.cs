@@ -20,11 +20,6 @@ public class ProjectsService
         _privilegeChecker = new PrivilegeChecker(_context, _user);
     }
 
-    private bool HasAccess(int projectId)
-    {
-        return _privilegeChecker.HasPrivilege(projectId, Role.User);
-    }
-
     public async Task<IEnumerable<Project>> GetUserProjects()
     {
         var userId = _user.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -44,7 +39,7 @@ public class ProjectsService
     public async Task<Project> GetProject(int id)
     {
         // we will throw a NotFound exception even if the project exists but the user does not have access
-        if (!HasAccess(id))
+        if (!_privilegeChecker.HasAccessToProject(id))
             throw new EntityNotFoundException("Project does not exist");
         return (await _context.Projects.FindAsync(id))!;
     }
@@ -69,7 +64,7 @@ public class ProjectsService
 
     public async Task<Project> EditProject(Project project)
     {
-        if (!HasAccess(project.Id))
+        if (!_privilegeChecker.HasAccessToProject(project.Id))
             throw new EntityNotFoundException("Project does not exist");
         if (!_privilegeChecker.HasPrivilege(project.Id, Role.Admin))
             throw new InsufficientMemoryException("You do not have the required privileges to edit this project");
@@ -81,7 +76,7 @@ public class ProjectsService
 
     public async Task DeleteProject(int id)
     {
-        if (!HasAccess(id))
+        if (!_privilegeChecker.HasAccessToProject(id))
             throw new EntityNotFoundException("Project does not exist");
         var project = await _context.Projects.FindAsync(id);
 
@@ -100,7 +95,7 @@ public class ProjectsService
 
     public async Task<Project> AddUser(int projectId, string userId)
     {
-        if (!HasAccess(projectId))
+        if (!_privilegeChecker.HasAccessToProject(projectId))
             throw new EntityNotFoundException("Project does not exist");
         if (!_privilegeChecker.HasPrivilege(projectId, Role.Admin))
             throw new InsufficientPrivilegesException(
@@ -126,7 +121,7 @@ public class ProjectsService
 
     public async Task<Project?> RemoveUser(int projectId, string userId)
     {
-        if (!HasAccess(projectId))
+        if (!_privilegeChecker.HasAccessToProject(projectId))
             throw new EntityNotFoundException("Project does not exist");
         if (!_privilegeChecker.HasPrivilege(projectId, Role.Admin))
             throw new InsufficientPrivilegesException(
@@ -184,7 +179,7 @@ public class ProjectsService
 
     public async Task<Project> PromoteUser(int projectId, string userId)
     {
-        if (!HasAccess(projectId))
+        if (!_privilegeChecker.HasAccessToProject(projectId))
             throw new EntityNotFoundException("Project does not exist");
         if (!_privilegeChecker.HasPrivilege(projectId, Role.Owner))
             throw new InsufficientPrivilegesException(
@@ -207,7 +202,7 @@ public class ProjectsService
 
     public async Task<Project> DemoteUser(int projectId, string userId)
     {
-        if (!HasAccess(projectId))
+        if (!_privilegeChecker.HasAccessToProject(projectId))
             throw new EntityNotFoundException("Project does not exist");
         if (!_privilegeChecker.HasPrivilege(projectId, Role.Owner))
             throw new InsufficientPrivilegesException(
@@ -230,7 +225,7 @@ public class ProjectsService
 
     public async Task<Project> TransferOwnership(int projectId, string userId)
     {
-        if (!HasAccess(projectId))
+        if (!_privilegeChecker.HasAccessToProject(projectId))
             throw new EntityNotFoundException("Project does not exist");
         if (!_privilegeChecker.HasPrivilege(projectId, Role.Owner))
             throw new InsufficientPrivilegesException(

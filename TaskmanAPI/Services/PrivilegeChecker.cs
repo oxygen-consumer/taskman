@@ -4,22 +4,21 @@ using TaskmanAPI.Enums;
 
 namespace TaskmanAPI.Services;
 
-public class PrivilegeChecker
+public class PrivilegeChecker(DefaultContext context, ClaimsPrincipal user)
 {
-    private readonly DefaultContext _context;
-    private readonly ClaimsPrincipal _user;
-
-    public PrivilegeChecker(DefaultContext context, ClaimsPrincipal user)
+    public bool HasAccessToProject(int projectId)
     {
-        _context = context;
-        _user = user;
-    }
+        var userId = user.FindFirstValue(ClaimTypes.NameIdentifier);
 
+        return context.RolePerProjects
+            .Any(rp => rp.ProjectId == projectId && rp.UserId == userId);
+    }
+    
     public bool HasPrivilege(int projectId, Role role)
     {
-        var userId = _user.FindFirstValue(ClaimTypes.NameIdentifier);
+        var userId = user.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        var userRole = _context.RolePerProjects
+        var userRole = context.RolePerProjects
             .Where(rp => rp.ProjectId == projectId && rp.UserId == userId)
             .Select(rp => rp.RoleName)
             .FirstOrDefault();
