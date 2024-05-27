@@ -13,7 +13,7 @@ public class PrivilegeChecker(DefaultContext context, ClaimsPrincipal user)
         return context.RolePerProjects
             .Any(rp => rp.ProjectId == projectId && rp.UserId == userId);
     }
-    
+
     public bool HasPrivilege(int projectId, Role role)
     {
         var userId = user.FindFirstValue(ClaimTypes.NameIdentifier);
