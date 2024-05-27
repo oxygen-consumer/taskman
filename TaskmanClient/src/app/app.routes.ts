@@ -5,11 +5,14 @@ import {StartPageComponent} from "./start/start-page.component";
 import {AuthGuard} from "./service/auth-service";
 import {ProjectsMasterComponent} from "./projects-master/projects-master.component";
 import {ProjectsComponent} from "./projects-master/projects/projects.component";
+import {DashboardComponent} from "./dashboard/dashboard.component";
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'start', component: StartPageComponent },
-  {path:'dashboard',component:ProjectsMasterComponent ,canActivate: [AuthGuard]},
+  {path:'dashboard',component:DashboardComponent ,canActivate: [AuthGuard] , children:[
+      { path: 'projects', component: ProjectsMasterComponent, canActivate:[AuthGuard] }
+    ]},
   { path: '**', redirectTo: '/start', pathMatch: 'full' }
 ];
