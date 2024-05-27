@@ -8,7 +8,7 @@ public class PrivilegeChecker
 {
     private readonly DefaultContext _context;
     private readonly ClaimsPrincipal _user;
-    
+
     public PrivilegeChecker(DefaultContext context, ClaimsPrincipal user)
     {
         _context = context;
@@ -23,14 +23,11 @@ public class PrivilegeChecker
             .Where(rp => rp.ProjectId == projectId && rp.UserId == userId)
             .Select(rp => rp.RoleName)
             .FirstOrDefault();
-        
-        if (userRole == null)
-        {
-            return false;
-        }
-        
+
+        if (userRole == null) return false;
+
         var userRoleEnum = Enum.Parse<Role>(userRole);
-        
+
         return userRoleEnum >= role;
     }
 }
