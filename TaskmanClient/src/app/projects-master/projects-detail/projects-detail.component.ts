@@ -1,6 +1,5 @@
-﻿import {Component, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
-import {LoginServiceService} from "../service/login-service.service";
-import {ProjectService} from "../service/project-service.service";
+﻿import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {ProjectService} from "../../service/project-service.service";
 import {Table, TableModule} from "primeng/table";
 import {InputTextModule} from "primeng/inputtext";
 import {FormsModule} from "@angular/forms";
@@ -12,9 +11,9 @@ import {ToastModule} from "primeng/toast";
 
 
 @Component({
-  selector: 'app-projects',
+  selector: 'app-projects-detail',
   standalone: true,
-  templateUrl: './projects.component.html',
+  templateUrl: './projects-detail.component.html',
   imports: [
     TableModule,
     InputTextModule,
@@ -25,9 +24,11 @@ import {ToastModule} from "primeng/toast";
     ProgressSpinnerModule,
     ToastModule
   ],
-  styleUrl: './projects.component.scss'
+  styleUrl: './projects-detail.component.scss'
 })
-export class ProjectsComponent {
+export class ProjectsDetailComponent {
+  @Input() row:any;
+  @Output() emitter = new EventEmitter<any>();
   data:any;
   token:any;
   loading = true;
@@ -38,6 +39,8 @@ export class ProjectsComponent {
   clonedRows:{[s:string]:Projects} = {};
   accesToken = "acces_token";
   refreshToken = "refresh_token";
+  editable:boolean = false;
+
   constructor(private service:ProjectService){
     this.token = sessionStorage.getItem(this.accesToken);
    }
@@ -69,12 +72,15 @@ export class ProjectsComponent {
           "description": row['description']
         }
         console.log(savedObject);
-        this.service.modifyProject(row["id"],savedObject).subscribe(result=>{
+        this.service.modifyProject(row["id"],savedObject).subscribe(()=>{
 
             this.loading = false;
-           }, error => {
-            console.error('Error occured');
-          this.loading = false;
+            this.addRow = true;
+           }, () => {
+            console.error('Obiect gol sau invalid');
+            this.data.shift();
+            this.addRow = true;
+            this.loading = false;
             });
 
 
@@ -84,16 +90,19 @@ export class ProjectsComponent {
         "name": row['name'],
         "description": row['description']
       }
+
       this.service.addProject(savedObject).subscribe(result=>{
         this.loadElements();
         this.loading = false;
+        this.addRow = true;
         }, error => {
-        console.error('Error occured');
+        console.error('Obiect gol sau invalid');
         this.loading = false;
-
+        this.data.shift();
+        this.addRow = true;
       });
     }
-  this.addRow = true;
+
     delete this.clonedRows[index];
   }
 
@@ -115,6 +124,9 @@ export class ProjectsComponent {
     this.saveRow = "add";
   }
 
+  back(){
+    this.emitter.emit("back");
+  }
 
 }
 
