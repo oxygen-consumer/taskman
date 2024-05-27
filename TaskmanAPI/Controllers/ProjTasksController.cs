@@ -11,6 +11,7 @@ public class ProjTasksController(DefaultContext context, IHttpContextAccessor ht
     : ControllerBase
 {
     private readonly ProjTasksService _projTasksService = new(context, httpContextAccessor);
+    private readonly UserService _userService = new(context);
 
     // GET: api/ProjTasks/get_user_tasks/{projectId}
     [HttpGet("get_user_tasks/{projectId}")]
@@ -56,9 +57,10 @@ public class ProjTasksController(DefaultContext context, IHttpContextAccessor ht
     }
 
     // api/ProjTasks/{id}/assign_user/{userid}
-    [HttpPost("{id}/assign_user/{userId}")]
-    public async Task<ActionResult<ProjTask>> AssignUsers(int id, string userId)
+    [HttpPost("{id}/assign_user/{username}")]
+    public async Task<ActionResult<ProjTask>> AssignUsers(int id, string username)
     {
+        var userId = await _userService.GetUserIdByUsername(username);
         return Ok(await _projTasksService.AddUser(id, userId));
     }
 }

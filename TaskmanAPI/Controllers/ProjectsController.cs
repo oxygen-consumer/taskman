@@ -13,6 +13,7 @@ public class ProjectsController(DefaultContext context, IHttpContextAccessor htt
     : Controller
 {
     private readonly ProjectsService _projectsService = new(context, httpContextAccessor);
+    private readonly UserService _userService = new(context);
 
     // GET: api/Projects
     [HttpGet]
@@ -56,37 +57,42 @@ public class ProjectsController(DefaultContext context, IHttpContextAccessor htt
 
     // TODO: methods like these should not return the project
     // add another user to project: api/Projects/{id}/adduser/{user_id}
-    [HttpPost("{id}/adduser/{user_id}")]
-    public async Task<ActionResult<Project>> AddUser(int id, string user_id)
+    [HttpPost("{id}/add_user/{username}")]
+    public async Task<ActionResult<Project>> AddUser(int id, string username)
     {
-        return Ok(await _projectsService.AddUser(id, user_id));
+        var userId = await _userService.GetUserIdByUsername(username);
+        return Ok(await _projectsService.AddUser(id, userId));
     }
 
     // remove user from project: api/Projects/{id}/removeuser/{user_id}
-    [HttpDelete("{id}/removeuser/{user_id}")]
-    public async Task<ActionResult<Project>> RemoveUser(int id, string user_id)
+    [HttpDelete("{id}/remove_user/{username}")]
+    public async Task<ActionResult<Project>> RemoveUser(int id, string username)
     {
-        return Ok(await _projectsService.RemoveUser(id, user_id));
+        var userId = await _userService.GetUserIdByUsername(username);
+        return Ok(await _projectsService.RemoveUser(id, userId));
     }
 
     // promote user to admin: api/Projects/{id}/promoteuser/{user_id}
-    [HttpPost("{id}/promoteuser/{user_id}")]
-    public async Task<ActionResult<Project>> PromoteUser(int id, string user_id)
+    [HttpPost("{id}/promote_user/{username}")]
+    public async Task<ActionResult<Project>> PromoteUser(int id, string username)
     {
-        return Ok(await _projectsService.PromoteUser(id, user_id));
+        var userId = await _userService.GetUserIdByUsername(username);
+        return Ok(await _projectsService.PromoteUser(id, userId));
     }
 
     // transfer ownership: api/Projects/{id}/transferownership/{user_id}
-    [HttpPost("{id}/transferownership/{user_id}")]
-    public async Task<ActionResult<Project>> TransferOwnership(int id, string user_id)
+    [HttpPost("{id}/transfer_ownership/{username}")]
+    public async Task<ActionResult<Project>> TransferOwnership(int id, string username)
     {
-        return Ok(await _projectsService.TransferOwnership(id, user_id));
+        var userId = await _userService.GetUserIdByUsername(username);
+        return Ok(await _projectsService.TransferOwnership(id, userId));
     }
 
     // demote user to regular user: api/projects/{id}/demoteuser/{user_id}
-    [HttpPost("{id}/demoteuser/{user_id}")]
-    public async Task<ActionResult<Project>> DemoteUser(int id, string user_id)
+    [HttpPost("{id}/demote_user/{username}")]
+    public async Task<ActionResult<Project>> DemoteUser(int id, string username)
     {
-        return Ok(await _projectsService.DemoteUser(id, user_id));
+        var userId = await _userService.GetUserIdByUsername(username);
+        return Ok(await _projectsService.DemoteUser(id, userId));
     }
 }
