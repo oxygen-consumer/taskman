@@ -8,7 +8,6 @@ import {ButtonModule} from "primeng/button";
 import {NgIf} from "@angular/common";
 import {ProgressSpinnerModule} from "primeng/progressspinner";
 import {ToastModule} from "primeng/toast";
-import {LoginServiceService} from "../../service/login-service.service";
 
 
 @Component({
@@ -29,7 +28,6 @@ import {LoginServiceService} from "../../service/login-service.service";
 })
 export class ProjectsDetailComponent {
   @Input() row:any;
-  cloneRow:any;
   @Output() emitter = new EventEmitter<any>();
   data:any;
   token:any;
@@ -42,48 +40,16 @@ export class ProjectsDetailComponent {
   accesToken = "acces_token";
   refreshToken = "refresh_token";
   editable:boolean = false;
-  editProject:boolean = false;
-  email:string|null;
 
-  constructor(private service:ProjectService , private loginService:LoginServiceService){
+  constructor(private service:ProjectService){
     this.token = sessionStorage.getItem(this.accesToken);
    }
 
     ngOnInit(){
       this.loading = true;
-      this.email = this.loginService.getEmail();
       this.loadElements();
     }
 
-   initEditProject(){
-    this.editProject = true;
-    this.cloneRow = {...this.row};
-   }
-
-   editCancel(){
-    this.row = this.cloneRow;
-    this.editProject = false;
-    delete this.cloneRow;
-   }
-   saveProject(){
-     const savedObject = {
-       "id": this.row['id'],
-       "name": this.row['name'],
-       "description": this.row['description']
-     }
-     this.service.modifyProject(this.row["id"],savedObject).subscribe(()=>{
-       delete this.cloneRow;
-       this.editProject = false;
-
-     }, () => {
-       console.error('Obiect gol sau invalid');
-       this.row = this.cloneRow;
-       this.editProject = false;
-       delete this.cloneRow;
-     });
-
-
-   }
   loadElements(){
     this.service.getProjects(this.token).subscribe(result =>{
       this.data = result;
