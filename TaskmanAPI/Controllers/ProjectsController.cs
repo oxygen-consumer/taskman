@@ -95,4 +95,11 @@ public class ProjectsController(DefaultContext context, IHttpContextAccessor htt
         var userId = await _userService.GetUserIdByUsername(username);
         return Ok(await _projectsService.DemoteUser(id, userId));
     }
+    
+    // get project users: api/projects/{id}/users
+    [HttpGet("{id}/users")]
+    public async Task<ActionResult<IEnumerable<object>>> GetProjectUsers(int id)
+    {
+        return Ok(await _projectsService.GetProjectUsers(id));
+    }
 }

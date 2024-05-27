@@ -255,4 +255,21 @@ public class ProjectsService
         await _context.SaveChangesAsync();
         return project!;
     }
+    
+    public async Task<IEnumerable<object>> GetProjectUsers(int projectId)
+    {
+        if (!_privilegeChecker.HasAccessToProject(projectId))
+            throw new EntityNotFoundException("Project does not exist");
+
+        var users = await _context.RolePerProjects
+            .Where(rp => rp.ProjectId == projectId)
+            .Select(rp => new
+            {
+                rp.User!.UserName,
+                rp.RoleName
+            })
+            .ToListAsync();
+
+        return users;
+    }
 }
