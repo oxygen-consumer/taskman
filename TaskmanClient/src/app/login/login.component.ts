@@ -17,6 +17,7 @@ export class LoginComponent {
   email: string | undefined;
   accesToken = "acces_token";
   refreshToken = "refresh_token";
+  userEmail = "user_email";
   @ViewChild('loginForm') myForm!: NgForm;
 
 
@@ -41,6 +42,7 @@ export class LoginComponent {
         const data = result;
         sessionStorage.setItem(this.accesToken,data.accessToken);
         sessionStorage.setItem(this.refreshToken,data.refreshToken);
+        sessionStorage.setItem(this.userEmail,values.email);
         form.reset();
         this.router.navigate(["/dashboard"]);
       }, error => {
