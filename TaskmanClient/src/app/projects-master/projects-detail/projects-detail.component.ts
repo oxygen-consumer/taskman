@@ -5,11 +5,14 @@ import {InputTextModule} from "primeng/inputtext";
 import {FormsModule} from "@angular/forms";
 import {RippleModule} from "primeng/ripple";
 import {ButtonModule} from "primeng/button";
-import {NgIf} from "@angular/common";
+import {DatePipe, NgIf} from "@angular/common";
 import {ProgressSpinnerModule} from "primeng/progressspinner";
 import {ToastModule} from "primeng/toast";
 import {LoginServiceService} from "../../service/login-service.service";
-
+import {TaskService} from "../../service/task-service.service";
+import {CalendarModule} from "primeng/calendar";
+import {BrowserModule} from "@angular/platform-browser";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({
   selector: 'app-projects-detail',
@@ -23,7 +26,8 @@ import {LoginServiceService} from "../../service/login-service.service";
     ButtonModule,
     NgIf,
     ProgressSpinnerModule,
-    ToastModule
+    ToastModule,
+    CalendarModule,
   ],
   styleUrl: './projects-detail.component.scss'
 })
@@ -41,11 +45,11 @@ export class ProjectsDetailComponent {
   clonedRows:{[s:string]:Projects} = {};
   accesToken = "acces_token";
   refreshToken = "refresh_token";
-  editable:boolean = false;
+  editable:boolean = true;
   editProject:boolean = false;
   email:string|null;
 
-  constructor(private service:ProjectService , private loginService:LoginServiceService){
+  constructor(private service:TaskService , private loginService:LoginServiceService, private projectService:ProjectService){
     this.token = sessionStorage.getItem(this.accesToken);
    }
 
@@ -55,7 +59,7 @@ export class ProjectsDetailComponent {
       this.loadElements();
     }
 
-   initEditProject(){
+   initEditTask(){
     this.editProject = true;
     this.cloneRow = {...this.row};
    }
@@ -65,13 +69,13 @@ export class ProjectsDetailComponent {
     this.editProject = false;
     delete this.cloneRow;
    }
-   saveProject(){
+   saveTask(){
      const savedObject = {
        "id": this.row['id'],
        "name": this.row['name'],
        "description": this.row['description']
      }
-     this.service.modifyProject(this.row["id"],savedObject).subscribe(()=>{
+     this.service.modifyTasks(this.row["id"],savedObject).subscribe(()=>{
        delete this.cloneRow;
        this.editProject = false;
 
@@ -85,9 +89,14 @@ export class ProjectsDetailComponent {
 
    }
   loadElements(){
-    this.service.getProjects(this.token).subscribe(result =>{
+    this.service.getTasks(this.token,this.row.id).subscribe(result =>{
       this.data = result;
+      this.data.forEach((row: { deadline: string | number | Date; }) =>{
+        row.deadline = new Date(row.deadline);
+      });
       this.loading = false;
+    },error => {
+      console.log(error);
     })
   }
   onRowEditInit(row: any,index:any) {
@@ -101,18 +110,19 @@ export class ProjectsDetailComponent {
     this.loading = true;
     if(this.saveRow == "edit"){
        const savedObject = {
-          "id": row['id'],
-          "name": row['name'],
-          "description": row['description']
+         "id":row['id'],
+         "projectId": this.row['id'],
+          "title": row['title'],
+          "description": row['description'],
+          "deadline":row['deadline']
         }
         console.log(savedObject);
-        this.service.modifyProject(row["id"],savedObject).subscribe(()=>{
+        this.service.modifyTasks(row["id"],savedObject).subscribe(()=>{
 
             this.loading = false;
             this.addRow = true;
            }, () => {
             console.error('Obiect gol sau invalid');
-            this.data.shift();
             this.addRow = true;
             this.loading = false;
             });
@@ -121,11 +131,13 @@ export class ProjectsDetailComponent {
     }
     else{
       const savedObject = {
-        "name": row['name'],
-        "description": row['description']
+        "projectId": this.row['id'],
+        "title": row['title'],
+        "description": row['description'],
+        "deadline":row['deadline']
       }
 
-      this.service.addProject(savedObject).subscribe(result=>{
+      this.service.addTasks(savedObject).subscribe(result=>{
         this.loadElements();
         this.loading = false;
         this.addRow = true;
