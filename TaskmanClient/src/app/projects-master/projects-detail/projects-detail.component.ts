@@ -48,6 +48,7 @@ export class ProjectsDetailComponent {
   editable:boolean = true;
   editProject:boolean = false;
   email:string|null;
+  userEmail: string|null;
 
   constructor(private service:TaskService , private loginService:LoginServiceService, private projectService:ProjectService){
     this.token = sessionStorage.getItem(this.accesToken);
@@ -174,7 +175,46 @@ export class ProjectsDetailComponent {
     this.emitter.emit("back");
   }
 
+
+  onAddUser(username: any){
+    this.projectService.addUser(this.row.id,username).subscribe(()=>{
+    }, () => {
+      console.error('Input gol sau invalid');
+    });
+  }
+
+  onRemoveUser(username: any){
+    this.projectService.removeUser(this.row.id,username).subscribe(()=>{
+    }, () => {
+      console.error('Input gol sau invalid');
+    });
+  }
+
+  onPromoteUser(username: any){
+    this.projectService.promoteUser(this.row.id,username).subscribe(()=>{
+    }, () => {
+      console.error('Input gol sau invalid');
+    });
+  }
+
+  onDemoteUser(username: any){
+    this.projectService.demoteUser(this.row.id,username).subscribe(()=>{
+    }, () => {
+      console.error('Input gol sau invalid');
+    });
+  }
+
+  onTransferOwnership(username: any){
+    this.projectService.transferOwnership(this.row.id,username).subscribe(()=>{
+    }, () => {
+      console.error('Input gol sau invalid');
+    });
+  }
+
+
 }
+
+
 
 export interface Projects {
   name?: string;
