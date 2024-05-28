@@ -27,6 +27,14 @@ public class CustomExceptionFilter : IExceptionFilter
                 };
                 context.ExceptionHandled = true;
                 break;
+            case EntityAlreadyExistsException:
+                context.Result = new ContentResult
+                {
+                    Content = context.Exception.Message,
+                    StatusCode = (int)HttpStatusCode.Conflict
+                };
+                context.ExceptionHandled = true;
+                break;
         }
     }
 }

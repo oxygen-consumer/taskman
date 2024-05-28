@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TaskmanAPI.Contexts;
 using TaskmanAPI.Model;
 using TaskmanAPI.Services;
@@ -7,6 +8,7 @@ namespace TaskmanAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class ProjTasksController(DefaultContext context, IHttpContextAccessor httpContextAccessor)
     : ControllerBase
 {
@@ -50,10 +52,10 @@ public class ProjTasksController(DefaultContext context, IHttpContextAccessor ht
 
     // DELETE: api/ProjTasks/5
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteProjTask(int id)
+    public async Task<ActionResult> DeleteProjTask(int id)
     {
         await _projTasksService.DeleteTask(id);
-        return Ok();
+        return NoContent();
     }
 
     // api/ProjTasks/{id}/assign_user/{userid}

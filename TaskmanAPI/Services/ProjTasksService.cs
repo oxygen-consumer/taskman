@@ -94,7 +94,7 @@ public class ProjTasksService
 
     public async Task<ProjTask> AddUser(int id, string userId)
     {
-        var task = await _context.ProjTasks.FindAsync(id);
+        var task = await _context.ProjTasks.Include(t => t.Users).FirstOrDefaultAsync(t => t.Id == id);
         if (task == null)
             throw new EntityNotFoundException("Task does not exist");
 
@@ -104,6 +104,9 @@ public class ProjTasksService
         var user = await _context.Users.FindAsync(userId);
         if (user == null)
             throw new EntityNotFoundException("User does not exist");
+
+        if (task.Users.Any(u => u.Id == userId))
+            throw new EntityAlreadyExistsException("User already assigned to task");
 
         task.Users.Add(user);
         await _context.SaveChangesAsync();

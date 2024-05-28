@@ -93,7 +93,7 @@ public class ProjectsService
         await _context.SaveChangesAsync();
     }
 
-    public async Task<Project> AddUser(int projectId, string userId)
+    public async Task AddUser(int projectId, string userId)
     {
         if (!_privilegeChecker.HasAccessToProject(projectId))
             throw new EntityNotFoundException("Project does not exist");
@@ -101,11 +101,16 @@ public class ProjectsService
             throw new InsufficientPrivilegesException(
                 "You do not have the required privileges to add a user to this project");
 
-        var project = await _context.Projects.FindAsync(projectId);
-
         var userToAdd = await _context.Users.FindAsync(userId);
         if (userToAdd == null)
             throw new EntityNotFoundException("User does not exist");
+
+        // check if user is already part of the project
+        var userRole = await _context.RolePerProjects
+            .Where(rp => rp.ProjectId == projectId && rp.UserId == userId)
+            .FirstOrDefaultAsync();
+        if (userRole != null)
+            throw new EntityAlreadyExistsException("User is already part of the project");
 
         var rolePerProject = new RolePerProject
         {
@@ -116,18 +121,15 @@ public class ProjectsService
         _context.RolePerProjects.Add(rolePerProject);
 
         await _context.SaveChangesAsync();
-        return project!;
     }
 
-    public async Task<Project?> RemoveUser(int projectId, string userId)
+    public async Task RemoveUser(int projectId, string userId)
     {
         if (!_privilegeChecker.HasAccessToProject(projectId))
             throw new EntityNotFoundException("Project does not exist");
         if (!_privilegeChecker.HasPrivilege(projectId, Role.Admin))
             throw new InsufficientPrivilegesException(
                 "You do not have the required privileges to remove a user from this project");
-
-        var project = await _context.Projects.FindAsync(projectId);
 
         var userRole = await _context.RolePerProjects
             .Where(rp => rp.ProjectId == projectId && rp.UserId == userId)
@@ -165,7 +167,7 @@ public class ProjectsService
             if (newOwner == null)
             {
                 await DeleteProject(projectId);
-                return default;
+                return;
             }
 
             newOwner.RoleName = Role.Owner.ToString();
@@ -174,18 +176,15 @@ public class ProjectsService
 
         _context.RolePerProjects.Remove(userRole);
         await _context.SaveChangesAsync();
-        return project;
     }
 
-    public async Task<Project> PromoteUser(int projectId, string userId)
+    public async Task PromoteUser(int projectId, string userId)
     {
         if (!_privilegeChecker.HasAccessToProject(projectId))
             throw new EntityNotFoundException("Project does not exist");
         if (!_privilegeChecker.HasPrivilege(projectId, Role.Owner))
             throw new InsufficientPrivilegesException(
                 "You do not have the required privileges to promote a user in this project");
-
-        var project = await _context.Projects.FindAsync(projectId);
 
         // check if user is part of the project
         var userRole = await _context.RolePerProjects
@@ -197,18 +196,15 @@ public class ProjectsService
         userRole.RoleName = Role.Admin.ToString();
         _context.Entry(userRole).State = EntityState.Modified;
         await _context.SaveChangesAsync();
-        return project!;
     }
 
-    public async Task<Project> DemoteUser(int projectId, string userId)
+    public async Task DemoteUser(int projectId, string userId)
     {
         if (!_privilegeChecker.HasAccessToProject(projectId))
             throw new EntityNotFoundException("Project does not exist");
         if (!_privilegeChecker.HasPrivilege(projectId, Role.Owner))
             throw new InsufficientPrivilegesException(
                 "You do not have the required privileges to demote a user in this project");
-
-        var project = await _context.Projects.FindAsync(projectId);
 
         // check if user is part of the project
         var userRole = await _context.RolePerProjects
@@ -220,18 +216,15 @@ public class ProjectsService
         userRole.RoleName = Role.User.ToString();
         _context.Entry(userRole).State = EntityState.Modified;
         await _context.SaveChangesAsync();
-        return project!;
     }
 
-    public async Task<Project> TransferOwnership(int projectId, string userId)
+    public async Task TransferOwnership(int projectId, string userId)
     {
         if (!_privilegeChecker.HasAccessToProject(projectId))
             throw new EntityNotFoundException("Project does not exist");
         if (!_privilegeChecker.HasPrivilege(projectId, Role.Owner))
             throw new InsufficientPrivilegesException(
                 "You do not have the required privileges to transfer ownership of this project");
-
-        var project = await _context.Projects.FindAsync(projectId);
 
         var currentOwnerRole = await _context.RolePerProjects
             .Where(rp => rp.ProjectId == projectId && rp.UserId == _user.FindFirstValue(ClaimTypes.NameIdentifier))
@@ -253,9 +246,8 @@ public class ProjectsService
         _context.Entry(currentOwnerRole).State = EntityState.Modified;
 
         await _context.SaveChangesAsync();
-        return project!;
     }
-    
+
     public async Task<IEnumerable<object>> GetProjectUsers(int projectId)
     {
         if (!_privilegeChecker.HasAccessToProject(projectId))
