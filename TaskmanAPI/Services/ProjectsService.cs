@@ -264,4 +264,17 @@ public class ProjectsService
 
         return users;
     }
+    
+    public async Task<string> GetMyRole(int projectId)
+    {
+        if (!_privilegeChecker.HasAccessToProject(projectId))
+            throw new EntityNotFoundException("Project does not exist");
+
+        var role = await _context.RolePerProjects
+            .Where(rp => rp.ProjectId == projectId && rp.UserId == _user.FindFirstValue(ClaimTypes.NameIdentifier))
+            .Select(rp => rp.RoleName)
+            .FirstOrDefaultAsync();
+
+        return role!;
+    }
 }
