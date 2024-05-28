@@ -115,7 +115,7 @@ public class ProjectsService
         var rolePerProject = new RolePerProject
         {
             ProjectId = projectId,
-            User = userToAdd,
+            UserId = userId,
             RoleName = Role.User.ToString()
         };
         _context.RolePerProjects.Add(rolePerProject);
