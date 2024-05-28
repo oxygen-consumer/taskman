@@ -27,6 +27,7 @@ builder.Services.AddDbContext<DefaultContext>(options =>
 {
     // use postgresql
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 });
 
 builder.Services.AddIdentityCore<User>()
