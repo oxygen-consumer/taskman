@@ -6,7 +6,7 @@ using TaskmanAPI.Services;
 
 namespace TaskmanAPI.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/Tasks")]
 [ApiController]
 [Authorize]
 public class ProjTasksController(DefaultContext context, IHttpContextAccessor httpContextAccessor)
@@ -15,42 +15,42 @@ public class ProjTasksController(DefaultContext context, IHttpContextAccessor ht
     private readonly ProjTasksService _projTasksService = new(context, httpContextAccessor);
     private readonly UserService _userService = new(context);
 
-    // GET: api/ProjTasks/get_user_tasks/{projectId}
+    // GET: api/Tasks/get_user_tasks/{projectId}
     [HttpGet("get_user_tasks/{projectId}")]
     public async Task<ActionResult<IEnumerable<ProjTask>>> GetUserTasks(int projectId)
     {
         return Ok(await _projTasksService.GetUserTasks(projectId));
     }
 
-    // GET: api/ProjTasks/get_all_tasks/{projectId}
+    // GET: api/Tasks/get_all_tasks/{projectId}
     [HttpGet("get_all_tasks/{projectId}")]
     public async Task<ActionResult<IEnumerable<ProjTask>>> GetAllTasks(int projectId)
     {
         return Ok(await _projTasksService.GetAllTasks(projectId));
     }
 
-    // GET: api/ProjTasks/{id}
+    // GET: api/Tasks/{id}
     [HttpGet("{id}")]
     public async Task<ActionResult<ProjTask>> GetProjTask(int id)
     {
         return Ok(await _projTasksService.GetTask(id));
     }
 
-    // PUT: api/ProjTasks/5
+    // PUT: api/Tasks/5
     [HttpPut]
     public async Task<ActionResult<ProjTask>> PutProjTask(ProjTask projTask)
     {
         return Ok(await _projTasksService.EditTask(projTask));
     }
 
-    // POST: api/ProjTasks/{projId}
+    // POST: api/Tasks/{projId}
     [HttpPost]
     public async Task<ActionResult<ProjTask>> PostProjTask(ProjTask projTask)
     {
         return Ok(await _projTasksService.CreateTask(projTask));
     }
 
-    // DELETE: api/ProjTasks/5
+    // DELETE: api/Tasks/5
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteProjTask(int id)
     {
@@ -58,7 +58,7 @@ public class ProjTasksController(DefaultContext context, IHttpContextAccessor ht
         return NoContent();
     }
 
-    // api/ProjTasks/{id}/assign_user/{userid}
+    // api/Tasks/{id}/assign_user/{userid}
     [HttpPost("{id}/assign_user/{username}")]
     public async Task<ActionResult<ProjTask>> AssignUsers(int id, string username)
     {
