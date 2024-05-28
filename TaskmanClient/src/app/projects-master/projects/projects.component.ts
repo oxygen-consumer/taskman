@@ -8,6 +8,7 @@ import {ButtonModule} from "primeng/button";
 import {NgIf} from "@angular/common";
 import {ProgressSpinnerModule} from "primeng/progressspinner";
 import {ToastModule} from "primeng/toast";
+import {CalendarModule} from "primeng/calendar";
 
 
 @Component({
@@ -22,7 +23,8 @@ import {ToastModule} from "primeng/toast";
     ButtonModule,
     NgIf,
     ProgressSpinnerModule,
-    ToastModule
+    ToastModule,
+    CalendarModule
   ],
   styleUrl: './projects.component.scss'
 })
