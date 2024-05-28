@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TaskmanAPI.Contexts;
+using TaskmanAPI.Filters;
 using TaskmanAPI.Model;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,7 +12,12 @@ builder.Services.AddAuthorizationBuilder();
 
 builder.Services.AddCors();
 
-builder.Services.AddControllers(options => { options.SuppressAsyncSuffixInActionNames = false; });
+builder.Services.AddControllers(options =>
+{
+    options.SuppressAsyncSuffixInActionNames = false;
+    options.Filters.Add<CustomExceptionFilter>();
+});
+builder.Services.AddHttpContextAccessor();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -21,6 +27,7 @@ builder.Services.AddDbContext<DefaultContext>(options =>
 {
     // use postgresql
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 });
 
 builder.Services.AddIdentityCore<User>()
@@ -36,7 +43,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 
     // cursed
-    app.UseCors(builder => builder
+    app.UseCors(corsPolicyBuilder => corsPolicyBuilder
         .AllowAnyOrigin()
         .AllowAnyMethod()
         .AllowAnyHeader()
