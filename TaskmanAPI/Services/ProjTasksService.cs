@@ -26,7 +26,9 @@ public class ProjTasksService
             throw new EntityNotFoundException("Project does not exist");
 
         var userid = _user.FindFirstValue(ClaimTypes.NameIdentifier);
-        var tasks = await _context.ProjTasks.Where(t => t.ProjectId == projectId).Include(projTask => projTask.Users)
+        // select only tasks where user is assigned and parent id is null to avoid returning subtasks
+        var tasks = await _context.ProjTasks.Where(t => t.ProjectId == projectId && t.ParentId == default)
+            .Include(projTask => projTask.Users)
             .ToListAsync();
 
         return tasks.Where(t => t.Users.Any(u => u.Id == userid));
@@ -37,7 +39,9 @@ public class ProjTasksService
         if (!_privilegeChecker.HasAccessToProject(projectId))
             throw new EntityNotFoundException("Project does not exist");
 
-        return await _context.ProjTasks.Where(t => t.ProjectId == projectId).Include(projTask => projTask.Users)
+        // return only tasks where parent id is null to avoid returning subtasks
+        return await _context.ProjTasks.Where(t => t.ProjectId == projectId && t.ParentId == default)
+            .Include(projTask => projTask.Users)
             .ToListAsync();
     }
 
@@ -58,6 +62,19 @@ public class ProjTasksService
         if (!_privilegeChecker.HasAccessToProject(task.ProjectId))
             throw new EntityNotFoundException("Project does not exist");
 
+        // if parent id is set, call the get method on parent task to avoid privilege exceptions
+        if (task.ParentId != default)
+            try
+            {
+                var parentTask = await GetTask(task.ParentId);
+                if (parentTask.ProjectId != task.ProjectId)
+                    throw new EntityNotFoundException("Parent task does not exist");
+            }
+            catch (EntityNotFoundException)
+            {
+                throw new EntityNotFoundException("Parent task does not exist");
+            }
+
         _context.ProjTasks.Add(task);
         await _context.SaveChangesAsync();
         return task;
@@ -73,6 +90,10 @@ public class ProjTasksService
             throw new EntityNotFoundException("Task does not exist");
         if (existingTask.ProjectId != task.ProjectId)
             throw new EntityNotFoundException("Task does not exist");
+
+        // sanity checks: can't change parent id or project id to avoid privilege escalation
+        task.ParentId = existingTask.ParentId;
+        task.ProjectId = existingTask.ProjectId;
 
         _context.Entry(task).State = EntityState.Modified;
         await _context.SaveChangesAsync();
@@ -112,7 +133,7 @@ public class ProjTasksService
         await _context.SaveChangesAsync();
         return task;
     }
-    
+
     public async Task<ProjTask> RemoveUser(int id, string userId)
     {
         var task = await _context.ProjTasks.Include(t => t.Users).FirstOrDefaultAsync(t => t.Id == id);
@@ -133,7 +154,7 @@ public class ProjTasksService
         await _context.SaveChangesAsync();
         return task;
     }
-    
+
     public async Task<ProjTask> ChangeStatus(int id, string status)
     {
         var task = await _context.ProjTasks.FindAsync(id);
@@ -149,5 +170,17 @@ public class ProjTasksService
         task.Status = taskStatus;
         await _context.SaveChangesAsync();
         return task;
+    }
+
+    public async Task<IEnumerable<ProjTask>> GetSubtasks(int id)
+    {
+        var task = await _context.ProjTasks.FindAsync(id);
+        if (task == null)
+            throw new EntityNotFoundException("Task does not exist");
+
+        if (!_privilegeChecker.HasAccessToProject(task.ProjectId))
+            throw new EntityNotFoundException("Project does not exist");
+
+        return await _context.ProjTasks.Where(t => t.ParentId == id).ToListAsync();
     }
 }
