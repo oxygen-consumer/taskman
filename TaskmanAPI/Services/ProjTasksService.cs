@@ -133,4 +133,21 @@ public class ProjTasksService
         await _context.SaveChangesAsync();
         return task;
     }
+    
+    public async Task<ProjTask> ChangeStatus(int id, string status)
+    {
+        var task = await _context.ProjTasks.FindAsync(id);
+        if (task == null)
+            throw new EntityNotFoundException("Task does not exist");
+
+        if (!_privilegeChecker.HasAccessToProject(task.ProjectId))
+            throw new EntityNotFoundException("Project does not exist");
+
+        if (!Enum.TryParse<TaskStatus>(status, out var taskStatus))
+            throw new EntityNotFoundException("Invalid status");
+
+        task.Status = taskStatus;
+        await _context.SaveChangesAsync();
+        return task;
+    }
 }

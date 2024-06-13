@@ -73,4 +73,11 @@ public class ProjTasksController(DefaultContext context, IHttpContextAccessor ht
         var userId = await _userService.GetUserIdByUsername(username);
         return Ok(await _projTasksService.RemoveUser(id, userId));
     }
+    
+    // api/Tasks/{id}/change_status/{status}
+    [HttpPut("{id}/change_status/{status}")]
+    public async Task<ActionResult<ProjTask>> ChangeStatus(int id, string status)
+    {
+        return Ok(await _projTasksService.ChangeStatus(id, status));
+    }
 }

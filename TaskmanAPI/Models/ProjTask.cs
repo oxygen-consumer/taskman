@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 using TaskmanAPI.Models;
 
@@ -19,8 +20,14 @@ public class ProjTask
     public string Description { get; set; }
 
     public DateTime Deadline { get; set; }
+    
+    public TaskStatus Status { get; set; }
+    
+    // make it easier for frontend
+    [NotMapped]
+    public string StatusString => Status.ToString();
 
-    //TO DO - status changes, comments
+    //TO DO - comments
     [JsonIgnore] public virtual ICollection<User> Users { get; set; } = new List<User>();
 
     //subtasks

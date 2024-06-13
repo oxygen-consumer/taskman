@@ -35,6 +35,13 @@ public class CustomExceptionFilter : IExceptionFilter
                 };
                 context.ExceptionHandled = true;
                 break;
+            case InvalidEntityStateException:
+                context.Result = new ContentResult
+                {
+                    Content = context.Exception.Message,
+                    StatusCode = (int)HttpStatusCode.BadRequest
+                };
+                break;
         }
     }
 }
