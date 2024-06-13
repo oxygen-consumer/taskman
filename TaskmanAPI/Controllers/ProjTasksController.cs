@@ -65,4 +65,12 @@ public class ProjTasksController(DefaultContext context, IHttpContextAccessor ht
         var userId = await _userService.GetUserIdByUsername(username);
         return Ok(await _projTasksService.AddUser(id, userId));
     }
+    
+    // api/Tasks/{id}/remove_user/{username}
+    [HttpDelete("{id}/remove_user/{username}")]
+    public async Task<ActionResult<ProjTask>> RemoveUsers(int id, string username)
+    {
+        var userId = await _userService.GetUserIdByUsername(username);
+        return Ok(await _projTasksService.RemoveUser(id, userId));
+    }
 }

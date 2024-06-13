@@ -112,4 +112,25 @@ public class ProjTasksService
         await _context.SaveChangesAsync();
         return task;
     }
+    
+    public async Task<ProjTask> RemoveUser(int id, string userId)
+    {
+        var task = await _context.ProjTasks.Include(t => t.Users).FirstOrDefaultAsync(t => t.Id == id);
+        if (task == null)
+            throw new EntityNotFoundException("Task does not exist");
+
+        if (!_privilegeChecker.HasAccessToProject(task.ProjectId))
+            throw new EntityNotFoundException("Project does not exist");
+
+        var user = await _context.Users.FindAsync(userId);
+        if (user == null)
+            throw new EntityNotFoundException("User does not exist");
+
+        if (task.Users.All(u => u.Id != userId))
+            throw new EntityNotFoundException("User not assigned to task");
+
+        task.Users.Remove(user);
+        await _context.SaveChangesAsync();
+        return task;
+    }
 }
