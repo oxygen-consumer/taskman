@@ -96,6 +96,13 @@
             <!-- Table Action Buttons -->
             <td class="px-4 py-3">
               <div class="flex items-center justify-center gap-3">
+                <button
+                  pButton pRipple
+                  type="button"
+                  icon="pi pi-eye text-xl"
+                  (click)="onButtonClick()"
+                  class="p-button-rounded left-1 p-button-text text-indigo-700 hover:text-indigo-400 transition duration-200">
+                </button>
                 <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil" (click)="onRowEditInit(row, rowIndex)" class="p-button-rounded p-button-text text-indigo-700 hover:text-indigo-300 transition duration-200"></button>
                 <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check" (click)="onRowEditSave(row,rowIndex)" class="w-1/2 p-button-rounded p-button-text p-button-success text-green-700 hover:text-green-400 transition duration-200"></button>
                 <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times" (click)="onRowEditCancel(row, rowIndex)" class="w-1/2 p-button-rounded p-button-text p-button-danger text-red-700 hover:text-red-400 transition duration-200"></button>

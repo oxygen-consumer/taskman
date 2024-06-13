@@ -10,7 +10,9 @@ import {NgIf} from "@angular/common";
 import {ProgressSpinnerModule} from "primeng/progressspinner";
 import {ToastModule} from "primeng/toast";
 import {ProjectsComponent} from "./projects/projects.component";
-import {ProjectsDetailComponent} from "./projects-detail/projects-detail.component";
+import {TasksComponent} from "./projects-detail/tasks/tasks.component";
+import {SubtasksComponent} from "./projects-detail/subtasks/subtasks.component";
+import {TaskSubtaskMasterComponent} from "./projects-detail/task-subtask-master.component";
 
 
 @Component({
@@ -27,7 +29,9 @@ import {ProjectsDetailComponent} from "./projects-detail/projects-detail.compone
     ProgressSpinnerModule,
     ToastModule,
     ProjectsComponent,
-    ProjectsDetailComponent
+    TasksComponent,
+    SubtasksComponent,
+    TaskSubtaskMasterComponent
   ],
   styleUrl: './projects-master.component.scss'
 })
