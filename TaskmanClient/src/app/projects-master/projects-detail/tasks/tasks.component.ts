@@ -1,5 +1,5 @@
 ﻿import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {ProjectService} from "../../service/project-service.service";
+import {ProjectService} from "../../../service/project-service.service";
 import {Table, TableModule} from "primeng/table";
 import {InputTextModule} from "primeng/inputtext";
 import {FormsModule} from "@angular/forms";
@@ -8,16 +8,16 @@ import {ButtonModule} from "primeng/button";
 import {DatePipe, NgIf} from "@angular/common";
 import {ProgressSpinnerModule} from "primeng/progressspinner";
 import {ToastModule} from "primeng/toast";
-import {LoginServiceService} from "../../service/login-service.service";
-import {TaskService} from "../../service/task-service.service";
+import {LoginServiceService} from "../../../service/login-service.service";
+import {TaskService} from "../../../service/task-service.service";
 import {CalendarModule} from "primeng/calendar";
 import {BrowserModule} from "@angular/platform-browser";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({
-  selector: 'app-projects-detail',
+  selector: 'app-tasks',
   standalone: true,
-  templateUrl: './projects-detail.component.html',
+  templateUrl: './tasks.component.html',
   imports: [
     TableModule,
     InputTextModule,
@@ -29,9 +29,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     ToastModule,
     CalendarModule,
   ],
-  styleUrl: './projects-detail.component.scss'
+  styleUrl: './tasks.component.scss'
 })
-export class ProjectsDetailComponent {
+export class TasksComponent {
   @Input() row:any;
   cloneRow:any;
   @Output() emitter = new EventEmitter<any>();
@@ -53,6 +53,9 @@ export class ProjectsDetailComponent {
   constructor(private service:TaskService , private loginService:LoginServiceService, private projectService:ProjectService){
     this.token = sessionStorage.getItem(this.accesToken);
    }
+  onButtonClick() {
+    this.emitter.emit();
+  }
 
     ngOnInit(){
       this.loading = true;

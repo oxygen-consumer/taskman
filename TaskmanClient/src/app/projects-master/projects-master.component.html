@@ -1,2 +1,2 @@
 ﻿<app-projects (rowEvent)="handleData($event)" *ngIf="!isDetailOn"></app-projects>
-<app-projects-detail [row] =this.row *ngIf="isDetailOn" (emitter)="modifyDetail()"></app-projects-detail>
+<app-task-subtask-master [row] =this.row  *ngIf="isDetailOn" ></app-task-subtask-master>
