@@ -65,4 +65,26 @@ public class ProjTasksController(DefaultContext context, IHttpContextAccessor ht
         var userId = await _userService.GetUserIdByUsername(username);
         return Ok(await _projTasksService.AddUser(id, userId));
     }
+
+    // api/Tasks/{id}/remove_user/{username}
+    [HttpDelete("{id}/remove_user/{username}")]
+    public async Task<ActionResult<ProjTask>> RemoveUsers(int id, string username)
+    {
+        var userId = await _userService.GetUserIdByUsername(username);
+        return Ok(await _projTasksService.RemoveUser(id, userId));
+    }
+
+    // api/Tasks/{id}/change_status/{status}
+    [HttpPut("{id}/change_status/{status}")]
+    public async Task<ActionResult<ProjTask>> ChangeStatus(int id, string status)
+    {
+        return Ok(await _projTasksService.ChangeStatus(id, status));
+    }
+
+    // api/Tasks/{id}/get_subtasks
+    [HttpGet("{id}/get_subtasks")]
+    public async Task<ActionResult<IEnumerable<ProjTask>>> GetSubtasks(int id)
+    {
+        return Ok(await _projTasksService.GetSubtasks(id));
+    }
 }
