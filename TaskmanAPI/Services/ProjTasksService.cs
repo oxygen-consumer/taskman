@@ -4,6 +4,7 @@ using TaskmanAPI.Contexts;
 using TaskmanAPI.Exceptions;
 using TaskmanAPI.Model;
 using TaskmanAPI.Models;
+using TaskStatus = TaskmanAPI.Enums.TaskStatus;
 
 namespace TaskmanAPI.Services;
 
@@ -45,7 +46,7 @@ public class ProjTasksService
         // return only tasks where parent id is null to avoid returning subtasks
         return await _context.ProjTasks.Where(t => t.ProjectId == projectId && t.ParentId == default).ToListAsync();
     }
-
+    
     public async Task<ProjTask> GetTask(int id)
     {
         var task = await _context.ProjTasks.FindAsync(id);

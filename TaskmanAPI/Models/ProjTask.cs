@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 using TaskmanAPI.Models;
+using TaskStatus = TaskmanAPI.Enums.TaskStatus;
 
 namespace TaskmanAPI.Model;
 
