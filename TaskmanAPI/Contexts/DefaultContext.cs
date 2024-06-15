@@ -16,6 +16,7 @@ public class DefaultContext : IdentityDbContext<User>
     public DbSet<Project> Projects { get; set; }
     public DbSet<ProjTask> ProjTasks { get; set; }
     public DbSet<RolePerProject> RolePerProjects { get; set; }
+    public DbSet<UserTasks> UserTasks { get; set; }
     public DbSet<Notification> Notifications { get; set; }
 
     protected override void OnModelCreating(ModelBuilder
@@ -25,6 +26,9 @@ public class DefaultContext : IdentityDbContext<User>
 
         modelBuilder.Entity<RolePerProject>()
             .HasKey(ab => new { ab.UserId, ab.ProjectId });
+
+        modelBuilder.Entity<UserTasks>()
+            .HasKey(ab => new { ab.UserId, ab.TaskId });
 
         //relatie one-to-many ( User-Notification )
         modelBuilder.Entity<Notification>()
@@ -43,6 +47,17 @@ public class DefaultContext : IdentityDbContext<User>
             .HasOne(t => t.User)
             .WithMany(t => t.RolePerProjects)
             .HasForeignKey(t => t.UserId);
+
+        // many-to-many (User-Task)
+        modelBuilder.Entity<UserTasks>()
+            .HasOne(t => t.User)
+            .WithMany(t => t.UserTasks)
+            .HasForeignKey(t => t.UserId);
+
+        modelBuilder.Entity<UserTasks>()
+            .HasOne(t => t.Task)
+            .WithMany(t => t.UserTasks)
+            .HasForeignKey(t => t.TaskId);
 
         /*keep this if needed in the future
          *

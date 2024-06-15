@@ -20,15 +20,14 @@ public class ProjTask
     public string Description { get; set; }
 
     public DateTime Deadline { get; set; }
-    
+
     public TaskStatus Status { get; set; }
-    
+
     // make it easier for frontend
-    [NotMapped]
-    public string StatusString => Status.ToString();
+    [NotMapped] public string StatusString => Status.ToString();
 
     //TO DO - comments
-    [JsonIgnore] public virtual ICollection<User> Users { get; set; } = new List<User>();
+    [JsonIgnore] public virtual ICollection<UserTasks> UserTasks { get; set; } = new List<UserTasks>();
 
     //subtasks
     //public virtual ICollection<ProjTask> ProjTasks { get; set; }

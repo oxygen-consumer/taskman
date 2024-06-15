@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TaskmanAPI.Contexts;
@@ -11,9 +12,11 @@ using TaskmanAPI.Contexts;
 namespace TaskmanAPI.Migrations
 {
     [DbContext(typeof(DefaultContext))]
-    partial class DefaultContextModelSnapshot : ModelSnapshot
+    [Migration("20240615165314_add user-task relation 2")]
+    partial class addusertaskrelation2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -152,6 +155,21 @@ namespace TaskmanAPI.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("ProjTaskUser", b =>
+                {
+                    b.Property<int>("TasksId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UsersId")
+                        .HasColumnType("text");
+
+                    b.HasKey("TasksId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("UserTasks", (string)null);
                 });
 
             modelBuilder.Entity("TaskmanAPI.Model.Notification", b =>
@@ -323,21 +341,6 @@ namespace TaskmanAPI.Migrations
                     b.ToTable("RolePerProjects");
                 });
 
-            modelBuilder.Entity("TaskmanAPI.Models.UserTasks", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("text");
-
-                    b.Property<int>("TaskId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("UserId", "TaskId");
-
-                    b.HasIndex("TaskId");
-
-                    b.ToTable("UserTasks");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -389,6 +392,21 @@ namespace TaskmanAPI.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ProjTaskUser", b =>
+                {
+                    b.HasOne("TaskmanAPI.Model.ProjTask", null)
+                        .WithMany()
+                        .HasForeignKey("TasksId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TaskmanAPI.Model.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("TaskmanAPI.Model.Notification", b =>
                 {
                     b.HasOne("TaskmanAPI.Model.User", "User")
@@ -430,37 +448,11 @@ namespace TaskmanAPI.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("TaskmanAPI.Models.UserTasks", b =>
-                {
-                    b.HasOne("TaskmanAPI.Model.ProjTask", "Task")
-                        .WithMany("UserTasks")
-                        .HasForeignKey("TaskId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TaskmanAPI.Model.User", "User")
-                        .WithMany("UserTasks")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Task");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("TaskmanAPI.Model.ProjTask", b =>
-                {
-                    b.Navigation("UserTasks");
-                });
-
             modelBuilder.Entity("TaskmanAPI.Model.User", b =>
                 {
                     b.Navigation("Notifications");
 
                     b.Navigation("RolePerProjects");
-
-                    b.Navigation("UserTasks");
                 });
 
             modelBuilder.Entity("TaskmanAPI.Models.Project", b =>

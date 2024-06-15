@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using TaskmanAPI.Contexts;
 using TaskmanAPI.Exceptions;
 using TaskmanAPI.Model;
+using TaskmanAPI.Models;
 
 namespace TaskmanAPI.Services;
 
@@ -27,11 +28,13 @@ public class ProjTasksService
 
         var userid = _user.FindFirstValue(ClaimTypes.NameIdentifier);
         // select only tasks where user is assigned and parent id is null to avoid returning subtasks
-        var tasks = await _context.ProjTasks.Where(t => t.ProjectId == projectId && t.ParentId == default)
-            .Include(projTask => projTask.Users)
+        var tasks = await _context.UserTasks
+            .Where(ut => ut.UserId == userid)
+            .Select(ut => ut.Task)
+            .Where(t => t!.ProjectId == projectId && t.ParentId == default)
             .ToListAsync();
 
-        return tasks.Where(t => t.Users.Any(u => u.Id == userid));
+        return tasks!;
     }
 
     public async Task<IEnumerable<ProjTask>> GetAllTasks(int projectId)
@@ -40,9 +43,7 @@ public class ProjTasksService
             throw new EntityNotFoundException("Project does not exist");
 
         // return only tasks where parent id is null to avoid returning subtasks
-        return await _context.ProjTasks.Where(t => t.ProjectId == projectId && t.ParentId == default)
-            .Include(projTask => projTask.Users)
-            .ToListAsync();
+        return await _context.ProjTasks.Where(t => t.ProjectId == projectId && t.ParentId == default).ToListAsync();
     }
 
     public async Task<ProjTask> GetTask(int id)
@@ -115,7 +116,7 @@ public class ProjTasksService
 
     public async Task<ProjTask> AddUser(int id, string userId)
     {
-        var task = await _context.ProjTasks.Include(t => t.Users).FirstOrDefaultAsync(t => t.Id == id);
+        var task = await _context.ProjTasks.FindAsync(id);
         if (task == null)
             throw new EntityNotFoundException("Task does not exist");
 
@@ -126,17 +127,19 @@ public class ProjTasksService
         if (user == null)
             throw new EntityNotFoundException("User does not exist");
 
-        if (task.Users.Any(u => u.Id == userId))
+        if (await _context.UserTasks.AnyAsync(ut => ut.TaskId == id && ut.UserId == userId))
             throw new EntityAlreadyExistsException("User already assigned to task");
 
-        task.Users.Add(user);
+        var userTask = new UserTasks { TaskId = id, UserId = userId };
+        _context.UserTasks.Add(userTask);
+
         await _context.SaveChangesAsync();
         return task;
     }
 
     public async Task<ProjTask> RemoveUser(int id, string userId)
     {
-        var task = await _context.ProjTasks.Include(t => t.Users).FirstOrDefaultAsync(t => t.Id == id);
+        var task = await _context.ProjTasks.FindAsync(id);
         if (task == null)
             throw new EntityNotFoundException("Task does not exist");
 
@@ -147,10 +150,11 @@ public class ProjTasksService
         if (user == null)
             throw new EntityNotFoundException("User does not exist");
 
-        if (task.Users.All(u => u.Id != userId))
+        var userTask = await _context.UserTasks.FirstOrDefaultAsync(ut => ut.TaskId == id && ut.UserId == userId);
+        if (userTask == null)
             throw new EntityNotFoundException("User not assigned to task");
 
-        task.Users.Remove(user);
+        _context.UserTasks.Remove(userTask);
         await _context.SaveChangesAsync();
         return task;
     }
