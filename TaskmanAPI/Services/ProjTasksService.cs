@@ -127,6 +127,10 @@ public class ProjTasksService
         var user = await _context.Users.FindAsync(userId);
         if (user == null)
             throw new EntityNotFoundException("User does not exist");
+        
+        // check if user is part of the project
+        if (!_context.RolePerProjects.Any(rp => rp.ProjectId == task.ProjectId && rp.UserId == userId))
+            throw new EntityNotFoundException("User does not have access to project");
 
         if (await _context.UserTasks.AnyAsync(ut => ut.TaskId == id && ut.UserId == userId))
             throw new EntityAlreadyExistsException("User already assigned to task");
