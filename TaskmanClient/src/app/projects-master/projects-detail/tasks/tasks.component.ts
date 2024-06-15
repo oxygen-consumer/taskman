@@ -49,12 +49,16 @@ export class TasksComponent {
   editProject:boolean = false;
   email:string|null;
   userEmail: string|null;
+  id: any;
+  projectId: any;
 
   constructor(private service:TaskService , private loginService:LoginServiceService, private projectService:ProjectService){
     this.token = sessionStorage.getItem(this.accesToken);
    }
-  onButtonClick() {
+  onButtonClick(row:any) {
     this.emitter.emit();
+    this.id = row.id;
+    this.projectId = row.projectId;
   }
 
     ngOnInit(){

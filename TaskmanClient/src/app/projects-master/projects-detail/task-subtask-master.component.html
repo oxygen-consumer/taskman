@@ -1,2 +1,2 @@
-﻿<app-tasks [row] = "this.row" (emitter)="modifyDetailTaskSubtask()" *ngIf="!isDetailOnTaskSubtask"></app-tasks>
-<app-subtasks *ngIf="isDetailOnTaskSubtask" (emitter)="modifyDetailTaskSubtask()"></app-subtasks>
+﻿<app-tasks #tasks [row] = "this.row" (emitter)="modifyDetailTaskSubtask()" *ngIf="!isDetailOnTaskSubtask"></app-tasks>
+<app-subtasks [task]="tasks"  *ngIf="isDetailOnTaskSubtask" (emitter)="modifyDetailTaskSubtask()"></app-subtasks>

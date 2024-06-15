@@ -34,6 +34,8 @@ import {SubtasksComponent} from "../projects-detail/subtasks/subtasks.component"
 export class TaskSubtaskMasterComponent {
   isDetailOnTaskSubtask:boolean = false;
   @Input() row:any;
+  @ViewChild("tasks")
+  tasks: any;
 
   handleData($event: any){
     this.row = $event;

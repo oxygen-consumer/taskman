@@ -1,1 +1,84 @@
-﻿
+﻿<div class="container my-10 mx-auto">
+  <h2 class="font-semibold mx-auto lg:w-3/4 text-3xl mb-8 text-gray-700 border-b-2 border-gray-200 pb-2">
+    Your Subtasks
+  </h2>
+
+  <div class=" container lg:w-3/4 mx-auto px-8 py-10 bg-slate-100 rounded-md shadow-lg">
+  <p-progressSpinner ariaLabel="loading" *ngIf="loading" class="flex justify-center my-6"/>
+    <div class="flex space-x-8">
+    <div class="mb-6">
+      <div class="inline-block bg-gray-200 rounded-full px-6 py-2 text-lg font-bold text-gray-700 shadow-md">
+        Project ID: <span class="text-indigo-600">{{ this.idProject }}</span>
+      </div>
+    </div>
+    <div class="mb-6">
+      <div class="inline-block bg-gray-200 rounded-full px-6 py-2 text-lg font-bold text-gray-700 shadow-md">
+        Task ID: <span class="text-indigo-600">{{ this.idTask }}</span>
+      </div>
+    </div>
+    </div>
+  <p-table #dt [value]="data" dataKey="id" editMode="row" *ngIf="!loading" class="w-full border-separate border-spacing-y-2">
+    <ng-template pTemplate="header">
+      <tr class=" text-white rounded-t-md">
+        <th class="px-4 py-2">Index</th>
+        <th class="px-4 py-2">Name</th>
+        <th class="px-4 py-2">Description</th>
+        <th class="px-4 py-2">Deadline</th>
+        <button (click)="onAddNewRow()" [disabled]="!addRow" class="w-6 rounded-full bg-indigo-500 hover:bg-indigo-400 transition duration-200"><i class="pi pi-plus"></i></button>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-row let-rowIndex="rowIndex" let-editing="editing">
+      <tr [pEditableRow]="row" class="hover:bg-indigo-100 transition duration-200 rounded-md bg-white">
+        <td class="px-4 py-3">{{rowIndex + 1}}</td>
+
+        <td class="px-4 py-3">
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText type="text" [(ngModel)]="row.title" required class="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ row.title }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+
+        <td class="px-4 py-3">
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <input pInputText type="text" [(ngModel)]="row.description" required class="w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ row.description }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="input">
+              <p-calendar [(ngModel)]="row.deadline" appendTo = "body" dateFormat="mm/dd/yy"></p-calendar>
+            </ng-template>
+            <ng-template pTemplate="output">
+              {{ row.deadline}}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+
+        <!-- Table Action Buttons -->
+        <td class="px-4 py-3">
+          <div class="flex items-center justify-center gap-3">
+            <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil" (click)="onRowEditInit(row, rowIndex)" class="p-button-rounded p-button-text text-indigo-700 hover:text-indigo-300 transition duration-200"></button>
+            <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check" (click)="onRowEditSave(row,rowIndex)" class="w-1/2 p-button-rounded p-button-text p-button-success text-green-700 hover:text-green-400 transition duration-200"></button>
+            <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times" (click)="onRowEditCancel(row, rowIndex)" class="w-1/2 p-button-rounded p-button-text p-button-danger text-red-700 hover:text-red-400 transition duration-200"></button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+  <div class="flex justify-center mt-10">
+    <button pButton pRipple type="button" (click)="back()" class="max-w-[10rem] px-6 py-3 bg-gradient-to-r from-purple-400 to-indigo-600 text-white rounded-full shadow-lg transform transition duration-300 hover:scale-105 hover:shadow-xl">
+      ← Back
+    </button>
+  </div>
+</div>

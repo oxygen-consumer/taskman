@@ -100,7 +100,7 @@
                   pButton pRipple
                   type="button"
                   icon="pi pi-eye text-xl"
-                  (click)="onButtonClick()"
+                  (click)="onButtonClick(row)"
                   class="p-button-rounded left-1 p-button-text text-indigo-700 hover:text-indigo-400 transition duration-200">
                 </button>
                 <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil" (click)="onRowEditInit(row, rowIndex)" class="p-button-rounded p-button-text text-indigo-700 hover:text-indigo-300 transition duration-200"></button>
