@@ -1,4 +1,4 @@
-﻿import {Component, Input, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
+﻿import {Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {Table, TableModule} from "primeng/table";
 import {InputTextModule} from "primeng/inputtext";
 import {FormsModule} from "@angular/forms";
@@ -36,6 +36,7 @@ export class TaskSubtaskMasterComponent {
   @Input() row:any;
   @ViewChild("tasks")
   tasks: any;
+  @Output() emitterBack = new EventEmitter<any>();
 
   handleData($event: any){
     this.row = $event;
@@ -48,5 +49,10 @@ export class TaskSubtaskMasterComponent {
   }
   ngOnInit(){
 
+  }
+
+  onBack(){
+    console.log("task-subtask-master");
+    this.emitterBack.emit("back");
   }
 }

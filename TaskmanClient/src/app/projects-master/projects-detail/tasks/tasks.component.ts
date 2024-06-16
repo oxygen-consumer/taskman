@@ -35,6 +35,7 @@ export class TasksComponent {
   @Input() row:any;
   cloneRow:any;
   @Output() emitter = new EventEmitter<any>();
+  @Output() backEmitter = new EventEmitter<any>();
   data:any;
   token:any;
   loading = true;
@@ -179,7 +180,7 @@ export class TasksComponent {
   }
 
   back(){
-    this.emitter.emit("back");
+    this.backEmitter.emit("back");
   }
 
 

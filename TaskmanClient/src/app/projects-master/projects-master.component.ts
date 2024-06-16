@@ -44,6 +44,7 @@ export class ProjectsMasterComponent {
   }
 
   modifyDetail(){
+    console.log("salut");
     this.isDetailOn = !this.isDetailOn;
   }
   ngOnInit(){
