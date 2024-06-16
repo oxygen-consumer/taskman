@@ -6,7 +6,7 @@ import {InputTextModule} from "primeng/inputtext";
 import {FormsModule} from "@angular/forms";
 import {RippleModule} from "primeng/ripple";
 import {ButtonModule} from "primeng/button";
-import {NgIf} from "@angular/common";
+import {NgIf, NgClass} from "@angular/common";
 import {ProgressSpinnerModule} from "primeng/progressspinner";
 import {ToastModule} from "primeng/toast";
 import {ProjectsComponent} from "../../projects/projects.component";
@@ -17,6 +17,7 @@ import {CalendarModule} from "primeng/calendar";
 import {Projects} from "../tasks/tasks.component";
 import {SubtaskService} from "../../../service/subtask-service";
 import {TaskService} from "../../../service/task-service.service";
+import {DropdownModule} from "primeng/dropdown";
 
 
 @Component({
@@ -36,7 +37,9 @@ import {TaskService} from "../../../service/task-service.service";
     HeaderComponent,
     NavigationComponent,
     DashboardComponent,
-    CalendarModule
+    CalendarModule,
+    DropdownModule,
+    NgClass
   ],
   styleUrl: './subtasks.component.scss'
 })
@@ -64,6 +67,11 @@ export class SubtasksComponent {
   userEmail: string|null;
   @Input()
   rol:string;
+  options: any[] = [
+    { value: 0, label: 'Open' },
+    { value: 1, label: 'In Progress' },
+    { value: 2, label: 'Done' }
+  ];
   modifyDetailTaskSubtask(){
     this.isDetailOnTaskSubtask = !this.isDetailOnTaskSubtask;
   }
@@ -73,7 +81,18 @@ export class SubtasksComponent {
   onButtonClick() {
     this.emitter.emit();
   }
-
+  getStatusLabel(status: number): string {
+    switch(status) {
+      case 0:
+        return 'Open';
+      case 1:
+        return 'In Progress';
+      case 2:
+        return 'Done';
+      default:
+        return 'Unknown Status';
+    }
+  }
   ngOnInit(){
     console.log(this.task);
     this.loading = true;

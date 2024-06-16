@@ -5,7 +5,7 @@ import {InputTextModule} from "primeng/inputtext";
 import {FormsModule} from "@angular/forms";
 import {RippleModule} from "primeng/ripple";
 import {ButtonModule} from "primeng/button";
-import {DatePipe, NgIf} from "@angular/common";
+import {DatePipe, NgIf, NgClass} from "@angular/common";
 import {ProgressSpinnerModule} from "primeng/progressspinner";
 import {ToastModule} from "primeng/toast";
 import {LoginServiceService} from "../../../service/login-service.service";
@@ -14,6 +14,9 @@ import {CalendarModule} from "primeng/calendar";
 import {BrowserModule} from "@angular/platform-browser";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {Router} from "@angular/router";
+import { CommonModule } from '@angular/common';
+import {DropdownModule} from "primeng/dropdown";
+
 
 @Component({
   selector: 'app-tasks',
@@ -29,6 +32,9 @@ import {Router} from "@angular/router";
     ProgressSpinnerModule,
     ToastModule,
     CalendarModule,
+    CommonModule,
+    NgClass,
+    DropdownModule
   ],
   styleUrl: './tasks.component.scss'
 })
@@ -55,52 +61,69 @@ export class TasksComponent {
   projectId: any;
   @Input()
   rol:string;
+  options: any[] = [
+    { value: 0, label: 'Open' },
+    { value: 1, label: 'In Progress' },
+    { value: 2, label: 'Done' }
+  ];
 
   constructor(private service:TaskService , private loginService:LoginServiceService, private projectService:ProjectService, private router:Router){
     this.token = sessionStorage.getItem(this.accesToken);
-   }
+  }
   onButtonClick(row:any) {
     this.emitter.emit();
     this.id = row.id;
     this.projectId = row.projectId;
   }
 
-    ngOnInit(){
-      this.loading = true;
-      this.email = this.loginService.getEmail();
-      this.loadElements();
+  ngOnInit(){
+    this.loading = true;
+    this.email = this.loginService.getEmail();
+    this.loadElements();
 
+  }
+  getStatusLabel(status: number): string {
+    switch(status) {
+      case 0:
+        return 'Open';
+      case 1:
+        return 'In Progress';
+      case 2:
+        return 'Done';
+      default:
+        return 'Unknown Status';
     }
+  }
 
-   initEditTask(){
+  initEditTask(){
     this.editProject = true;
     this.cloneRow = {...this.row};
-   }
+  }
 
-   editCancel(){
+  editCancel(){
     this.row = this.cloneRow;
     this.editProject = false;
     delete this.cloneRow;
-   }
-   saveProject(){
-     const savedObject = {
-       "id": this.row['id'],
-       "name": this.row['name'],
-       "description": this.row['description']
-     }
-     this.projectService.modifyProject(this.row["id"],savedObject).subscribe(()=>{
-       delete this.cloneRow;
-       this.editProject = false;
+  }
+  saveProject(){
+    const savedObject = {
+      "id": this.row['id'],
+      "name": this.row['name'],
+      "description": this.row['description']
+    }
+    this.projectService.modifyProject(this.row["id"],savedObject).subscribe(()=>{
+      delete this.cloneRow;
+      this.editProject = false;
 
-     }, () => {
-       console.error('Obiect gol sau invalid');
-       this.row = this.cloneRow;
-       this.editProject = false;
-       delete this.cloneRow;
-     });
+    }, () => {
+      console.error('Obiect gol sau invalid');
+      this.row = this.cloneRow;
+      this.editProject = false;
+      delete this.cloneRow;
+    });
 
 
-   }
+  }
   loadElements(){
     this.service.getTasks(this.token,this.row.id).subscribe(result =>{
       this.data = result;
@@ -122,23 +145,25 @@ export class TasksComponent {
   onRowEditSave(row: any,index:any) {
     this.loading = true;
     if(this.saveRow == "edit"){
-       const savedObject = {
-         "id":row['id'],
-         "projectId": this.row['id'],
-          "title": row['title'],
-          "description": row['description'],
-          "deadline":row['deadline']
-        }
-        console.log(savedObject);
-        this.service.modifyTasks(row["id"],savedObject).subscribe(()=>{
+      const savedObject = {
+        "id":row['id'],
+        "projectId": this.row['id'],
+        "title": row['title'],
+        "description": row['description'],
+        "deadline":row['deadline'],
+        "status": row['status']
 
-            this.loading = false;
-            this.addRow = true;
-           }, () => {
-            console.error('Obiect gol sau invalid');
-            this.addRow = true;
-            this.loading = false;
-            });
+      }
+      console.log(savedObject);
+      this.service.modifyTasks(row["id"],savedObject).subscribe(()=>{
+
+        this.loading = false;
+        this.addRow = true;
+      }, () => {
+        console.error('Obiect gol sau invalid');
+        this.addRow = true;
+        this.loading = false;
+      });
 
 
     }
@@ -147,14 +172,16 @@ export class TasksComponent {
         "projectId": this.row['id'],
         "title": row['title'],
         "description": row['description'],
-        "deadline":row['deadline']
+        "deadline":row['deadline'],
+        "status": row['status']
+
       }
 
       this.service.addTasks(savedObject).subscribe(result=>{
         this.loadElements();
         this.loading = false;
         this.addRow = true;
-        }, error => {
+      }, error => {
         console.error('Obiect gol sau invalid');
         this.loading = false;
         this.data.shift();

@@ -21,7 +21,7 @@
           </div>
           <div class="flex items-center">
             <input [disabled]="!editProject" type="text" pInputText [(ngModel)]="row.description" class="w-full border-b-2 border-gray-300 focus:border-indigo-600 focus:outline-none p-2" placeholder="Project Description"/>
-            <div>
+            <div class="flex">
               <button *ngIf="(!editProject) && (this.rol == 'Owner' || this.rol == 'Admin') " pButton pRipple type="button" (click)="initEditTask()" icon="pi pi-pencil" class="p-button-rounded border-2 border-blue-300 bg-blue-100 w-[3rem] p-button-text text-indigo-700 hover:text-indigo-300 transition duration-200 "></button>
               <button *ngIf="(!editProject) && this.rol == 'Owner'"  pButton pRipple type="button" (click)="deleteProject()" icon="pi pi-trash" class="p-button-rounded border-2 border-red-300 bg-red-100 w-[3rem] p-button-text text-red-700 hover:text-red-300 transition duration-200 "></button>
             </div>
@@ -54,6 +54,7 @@
             <th class="px-4 py-2">Name</th>
             <th class="px-4 py-2">Description</th>
             <th class="px-4 py-2">Deadline</th>
+            <th class="px-4 py-2">Status</th>
             <button (click)="onAddNewRow()" [disabled]="!addRow" class="w-6 rounded-full bg-indigo-500 hover:bg-indigo-400 transition duration-200"><i class="pi pi-plus"></i></button>
           </tr>
         </ng-template>
@@ -90,6 +91,26 @@
                 </ng-template>
                 <ng-template pTemplate="output">
                   {{ row.deadline}}
+                </ng-template>
+              </p-cellEditor>
+            </td>
+
+            <td class="px-4 py-3 text-center">
+              <p-cellEditor>
+                <ng-template pTemplate="input">
+                  <p-dropdown
+                    [options] = options
+                    [(ngModel)]="row.status"
+                  ></p-dropdown>
+                </ng-template>
+                <ng-template pTemplate="output">
+                  <div [ngClass]= "{
+                  'text-blue-600 bg-blue-50': row.status === 0,
+                  'text-yellow-600 bg-yellow-50': row.status === 1,
+                  'text-green-600 bg-green-50': row.status === 2,
+                  'text-gray-600 bg-gray-50': row.status !== 0 && row.status !== 1 && row.status !== 2}" class="inline-flex items-center text-center text-nowrap rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ring-gray-500/10">
+                    {{ getStatusLabel(row.status) }}
+                  </div>
                 </ng-template>
               </p-cellEditor>
             </td>
