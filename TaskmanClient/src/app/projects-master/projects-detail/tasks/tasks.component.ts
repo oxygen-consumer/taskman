@@ -82,13 +82,13 @@ export class TasksComponent {
     this.editProject = false;
     delete this.cloneRow;
    }
-   saveTask(){
+   saveProject(){
      const savedObject = {
        "id": this.row['id'],
        "name": this.row['name'],
        "description": this.row['description']
      }
-     this.service.modifyTasks(this.row["id"],savedObject).subscribe(()=>{
+     this.projectService.modifyProject(this.row["id"],savedObject).subscribe(()=>{
        delete this.cloneRow;
        this.editProject = false;
 
