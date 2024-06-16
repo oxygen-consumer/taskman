@@ -38,6 +38,6 @@ export class DashboardComponent {
 
   }
   ngOnInit(){
-    this.router.navigate(["/dashboard/projects"]);
+
   }
 }
