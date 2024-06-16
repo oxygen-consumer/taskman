@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TaskmanAPI.Contexts;
 using TaskmanAPI.Models;
@@ -106,7 +107,7 @@ public class ProjectsController(DefaultContext context, IHttpContextAccessor htt
     {
         return Ok(await _projectsService.GetProjectUsers(id));
     }
-    
+
     // get current user's role in project: api/projects/{id}/my_role
     [HttpGet("{id}/my_role")]
     public async Task<ActionResult<string>> GetMyRole(int id)

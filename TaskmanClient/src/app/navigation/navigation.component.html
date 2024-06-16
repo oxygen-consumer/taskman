@@ -6,21 +6,27 @@
         <div class="flex flex-shrink-0 items-center">
           <!-- TaskMan Logo -->
           <svg class="h-8 w-auto" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="50" cy="50" r="48" stroke="#7C3AED" stroke-width="4" fill="none"/>
-            <line x1="35" y1="30" x2="65" y2="30" stroke="#7C3AED" stroke-width="6" stroke-linecap="round"/>
-            <line x1="50" y1="30" x2="50" y2="60" stroke="#7C3AED" stroke-width="6" stroke-linecap="round"/>
-            <polyline points="40,60 50,70 65,50" stroke="#7C3AED" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle cx="50" cy="23" r="3" fill="#7C3AED"/>
+            <circle cx="50" cy="50" fill="none" r="48" stroke="#7C3AED" stroke-width="4"/>
+            <line stroke="#7C3AED" stroke-linecap="round" stroke-width="6" x1="35" x2="65" y1="30" y2="30"/>
+            <line stroke="#7C3AED" stroke-linecap="round" stroke-width="6" x1="50" x2="50" y1="30" y2="60"/>
+            <polyline fill="none" points="40,60 50,70 65,50" stroke="#7C3AED" stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="6"/>
+            <circle cx="50" cy="23" fill="#7C3AED" r="3"/>
           </svg>
-          <span class=" ml-4 self-center text-2xl font-semibold whitespace-nowrap bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">TaskMan</span>
+          <span
+            class=" ml-4 self-center text-2xl font-semibold whitespace-nowrap bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">TaskMan</span>
         </div>
         <div class="hidden sm:ml-6 sm:block">
           <div class="flex space-x-4">
             <!-- Current: "bg-violet-400 text-white", Default: "text-gray-600 hover:bg-violet-300 hover:text-white" -->
-            <a href="#" class="bg-violet-400 text-white rounded-md px-3 py-2 text-sm font-medium" aria-current="page">Dashboard</a>
-            <a href="#" class="text-gray-600 hover:bg-violet-300 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Tasks</a>
-            <a href="#" class="text-gray-600 hover:bg-violet-300 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Projects</a>
-            <a href="#" class="text-gray-600 hover:bg-violet-300 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Calendar</a>
+            <a aria-current="page" class="bg-violet-400 text-white rounded-md px-3 py-2 text-sm font-medium" href="#">Dashboard</a>
+            <a class="text-gray-600 hover:bg-violet-300 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+               href="#">Tasks</a>
+            <a class="text-gray-600 hover:bg-violet-300 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+               href="#">Projects</a>
+            <a class="text-gray-600 hover:bg-violet-300 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+               href="#">Calendar</a>
           </div>
         </div>
       </div>
@@ -31,10 +37,13 @@
   <!-- Mobile menu -->
   <div class="sm:hidden" id="mobile-menu">
     <div class="space-y-1 px-2 pb-3 pt-2">
-      <a href="#" class="bg-violet-400 text-white block rounded-md px-3 py-2 text-base font-medium" aria-current="page">Dashboard</a>
-      <a href="#" class="text-gray-600 hover:bg-violet-300 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Tasks</a>
-      <a href="#" class="text-gray-600 hover:bg-violet-300 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Projects</a>
-      <a href="#" class="text-gray-600 hover:bg-violet-300 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Calendar</a>
+      <a aria-current="page" class="bg-violet-400 text-white block rounded-md px-3 py-2 text-base font-medium" href="#">Dashboard</a>
+      <a class="text-gray-600 hover:bg-violet-300 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
+         href="#">Tasks</a>
+      <a class="text-gray-600 hover:bg-violet-300 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
+         href="#">Projects</a>
+      <a class="text-gray-600 hover:bg-violet-300 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
+         href="#">Calendar</a>
     </div>
   </div>
 </nav>

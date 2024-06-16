@@ -1,4 +1,4 @@
-import {Component, ElementRef, ViewChild, ViewChildren} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {Router, RouterLink, RouterOutlet} from '@angular/router';
 import {FormBuilder, FormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators} from "@angular/forms";
 import {LoginServiceService} from "../service/login-service.service";
@@ -20,14 +20,14 @@ export class LoginComponent {
   @ViewChild('loginForm') myForm!: NgForm;
 
 
-  constructor(private fb: FormBuilder, private loginService: LoginServiceService , private router:Router) {
+  constructor(private fb: FormBuilder, private loginService: LoginServiceService, private router: Router) {
     this.registerForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
     });
   }
 
-  login(form:any) {
+  login(form: any) {
     console.log(form);
     const email = form.value.email;
     const password = form.value.password;
@@ -36,11 +36,11 @@ export class LoginComponent {
       'password': password,
     };
 
-    if(this.registerForm.valid){
+    if (this.registerForm.valid) {
       this.loginService.onLogin(values).subscribe(result => {
         const data = result;
-        sessionStorage.setItem(this.accesToken,data.accessToken);
-        sessionStorage.setItem(this.refreshToken,data.refreshToken);
+        sessionStorage.setItem(this.accesToken, data.accessToken);
+        sessionStorage.setItem(this.refreshToken, data.refreshToken);
         console.log(sessionStorage.getItem(this.accesToken));
         form.reset();
         this.router.navigate(["/dashboard"]);

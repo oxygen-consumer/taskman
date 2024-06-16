@@ -1,6 +1,6 @@
-import {Component, ElementRef, ViewChild, ViewChildren} from '@angular/core';
-import {RouterOutlet } from '@angular/router';
-import {FormBuilder, FormGroup,ReactiveFormsModule, Validators} from "@angular/forms";
+import {Component, ViewChildren} from '@angular/core';
+import {RouterOutlet} from '@angular/router';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {LoginServiceService} from "../service/login-service.service";
 import {HttpClientModule} from "@angular/common/http";
 import {NgIf} from "@angular/common";
@@ -17,8 +17,8 @@ export class RegisterComponent {
   title: any;
   password: string | undefined;
   email: string | undefined;
-  isMessageShown:boolean = false;
-  message:string | undefined;
+  isMessageShown: boolean = false;
+  message: string | undefined;
   @ViewChildren('para') firstParagraph!: any;
 
   constructor(private fb: FormBuilder, private loginService: LoginServiceService) {

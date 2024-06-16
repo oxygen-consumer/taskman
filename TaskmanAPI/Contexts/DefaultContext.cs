@@ -8,7 +8,9 @@ namespace TaskmanAPI.Contexts;
 // RENAME THIS IF USING MORE CONTEXTS
 public class DefaultContext : IdentityDbContext<User>
 {
-    public DefaultContext(DbContextOptions<DefaultContext> options) : base(options){}
+    public DefaultContext(DbContextOptions<DefaultContext> options) : base(options)
+    {
+    }
 
     public DbSet<User> Users { get; set; }
     public DbSet<Project> Projects { get; set; }

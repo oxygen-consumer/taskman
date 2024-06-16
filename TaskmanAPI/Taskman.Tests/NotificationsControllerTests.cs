@@ -4,8 +4,7 @@ using TaskmanAPI.Contexts;
 using TaskmanAPI.Controllers;
 using TaskmanAPI.Model;
 
-
-public class NotificationsControllerTests 
+public class NotificationsControllerTests
 {
     private DefaultContext _context;
     private NotificationsController _controller;
@@ -18,7 +17,7 @@ public class NotificationsControllerTests
     private void Setup()
     {
         var options = new DbContextOptionsBuilder<DefaultContext>()
-            .UseInMemoryDatabase(databaseName: $"TestDatabase_{Guid.NewGuid()}")
+            .UseInMemoryDatabase($"TestDatabase_{Guid.NewGuid()}")
             .Options;
         _context = new DefaultContext(options);
 
@@ -33,8 +32,8 @@ public class NotificationsControllerTests
     {
         var notifications = new List<Notification>
         {
-            new Notification { Id = 1,UserId = "1",Title = "Titlu1", Content = "Test1" },
-            new Notification { Id = 2, UserId = "2", Title = "Titlu2", Content = "Test2" }
+            new() { Id = 1, UserId = "1", Title = "Titlu1", Content = "Test1" },
+            new() { Id = 2, UserId = "2", Title = "Titlu2", Content = "Test2" }
         };
 
         _context.Notifications.AddRange(notifications);
@@ -112,7 +111,7 @@ public class NotificationsControllerTests
     public async Task PutNotification_ReturnsNotFound_WhenNotificationDoesNotExist()
     {
         // Arrange
-        var notification = new Notification { Id = 10,UserId = "99",Title = "Titlu99", Content = "Updated" };
+        var notification = new Notification { Id = 10, UserId = "99", Title = "Titlu99", Content = "Updated" };
 
         // Act
         var result = await _controller.PutNotification(10, notification);
@@ -121,13 +120,13 @@ public class NotificationsControllerTests
         Assert.IsType<NotFoundResult>(result);
     }
 
-    
+
     //Test for PostNotification method
     [Fact]
     public async Task PostNotification_ReturnsCreatedAtAction_WhenPostIsSuccessful()
     {
         // Arrange
-        var notification = new Notification { Id = 3,UserId = "3",Title = "Title3", Content = "New" };
+        var notification = new Notification { Id = 3, UserId = "3", Title = "Title3", Content = "New" };
 
         // Act
         var result = await _controller.PostNotification(notification);
@@ -147,7 +146,7 @@ public class NotificationsControllerTests
         var result = await _controller.DeleteNotification(1);
 
         // Assert
-        Assert.IsType<NoContentResult>(result); 
+        Assert.IsType<NoContentResult>(result);
     }
 
     [Fact]
@@ -159,5 +158,4 @@ public class NotificationsControllerTests
         // Assert
         Assert.IsType<NotFoundResult>(result);
     }
-    
 }

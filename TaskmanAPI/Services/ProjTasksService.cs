@@ -46,7 +46,7 @@ public class ProjTasksService
         // return only tasks where parent id is null to avoid returning subtasks
         return await _context.ProjTasks.Where(t => t.ProjectId == projectId && t.ParentId == default).ToListAsync();
     }
-    
+
     public async Task<ProjTask> GetTask(int id)
     {
         var task = await _context.ProjTasks.FindAsync(id);
@@ -127,7 +127,7 @@ public class ProjTasksService
         var user = await _context.Users.FindAsync(userId);
         if (user == null)
             throw new EntityNotFoundException("User does not exist");
-        
+
         // check if user is part of the project
         if (!_context.RolePerProjects.Any(rp => rp.ProjectId == task.ProjectId && rp.UserId == userId))
             throw new EntityNotFoundException("User does not have access to project");

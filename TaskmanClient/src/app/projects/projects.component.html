@@ -1,25 +1,29 @@
-﻿
-<div class="container lg:w-2/3 mx-auto my-8 px-8 py-12 lg:px-8 bg-slate-100 rounded-md">
-  <p-progressSpinner ariaLabel="loading" *ngIf="loading" class="flex justify-center my-4"/>
+﻿<div class="container lg:w-2/3 mx-auto my-8 px-8 py-12 lg:px-8 bg-slate-100 rounded-md">
+  <p-progressSpinner *ngIf="loading" ariaLabel="loading" class="flex justify-center my-4"/>
 
-  <p-table #dt [value]="data" dataKey="id" editMode="row" *ngIf="!loading" class="w-full">
+  <p-table #dt *ngIf="!loading" [value]="data" class="w-full" dataKey="id" editMode="row">
     <ng-template pTemplate="header">
       <tr class=" text-white rounded-full">
         <th class="px-4 py-2">Index</th>
         <th class="px-4 py-2">Name</th>
         <th class="px-4 py-2">Description</th>
-        <button (click)=onAddNewRow() [disabled]="!addRow"  class="w-6 rounded-full bg-indigo-500 hover:bg-indigo-400 transition duration-200"><i class="pi pi-plus" ></i></button>
+        <button (click)=onAddNewRow() [disabled]="!addRow"
+                class="w-6 rounded-full bg-indigo-500 hover:bg-indigo-400 transition duration-200"><i
+          class="pi pi-plus"></i></button>
 
       </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-row let-rowIndex="rowIndex" let-editing="editing">
+    <ng-template let-editing="editing" let-row let-rowIndex="rowIndex" pTemplate="body">
       <tr [pEditableRow]="row" class="hover:bg-indigo-100 transition duration-200">
-        <td class="px-4 py-2">{{rowIndex+1}}</td>
+        <td class="px-4 py-2">{{ rowIndex + 1 }}</td>
 
         <td class="px-4 py-2">
           <p-cellEditor>
             <ng-template pTemplate="input">
-              <input pInputText type="text" [(ngModel)]="row.name" class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
+              <input [(ngModel)]="row.name"
+                     class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                     pInputText
+                     type="text"/>
             </ng-template>
             <ng-template pTemplate="output">
               {{ row.name }}
@@ -30,7 +34,10 @@
         <td>
           <p-cellEditor>
             <ng-template pTemplate="input">
-              <input pInputText type="text" [(ngModel)]="row.description" class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
+              <input [(ngModel)]="row.description"
+                     class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                     pInputText
+                     type="text"/>
             </ng-template>
             <ng-template pTemplate="output">
               {{ row.description }}
@@ -40,35 +47,36 @@
 
         <td class="px-4 py-2">
           <div class="flex items-center justify-center gap-2 ">
-              <button
-                *ngIf="!editing"
-                pButton
-                pRipple
-                type="button"
-                pInitEditableRow
-                icon="pi pi-pencil"
-                (click)="onRowEditInit(row, rowIndex)"
-                class="p-button-rounded p-button-text text-indigo-700 hover:text-indigo-300 transition duration-200">
-              </button>
-              <button
-                  *ngIf="editing"
-                  pButton
-                  pRipple
-                  type="button"
-                  pSaveEditableRow
-                  icon="pi pi-check"
-                  (click)="onRowEditSave(row,rowIndex)"
-                  class="w-1/2 p-button-rounded p-button-text p-button-success text-green-700 hover:text-green-400 transition duration-200">
-              </button>
-              <button
-                  *ngIf="editing"
-                  pButton pRipple
-                  type="button"
-                  pCancelEditableRow
-                  icon="pi pi-times"
-                  (click)="onRowEditCancel(row, rowIndex)"
-                  class="w-1/2 p-button-rounded p-button-text p-button-danger text-red-700 hover:text-red-400 transition duration-200">
-              </button>
+            <button
+              (click)="onRowEditInit(row, rowIndex)"
+              *ngIf="!editing"
+              class="p-button-rounded p-button-text text-indigo-700 hover:text-indigo-300 transition duration-200"
+              icon="pi pi-pencil"
+              pButton
+              pInitEditableRow
+              pRipple
+              type="button">
+            </button>
+            <button
+              (click)="onRowEditSave(row,rowIndex)"
+              *ngIf="editing"
+              class="w-1/2 p-button-rounded p-button-text p-button-success text-green-700 hover:text-green-400 transition duration-200"
+              icon="pi pi-check"
+              pButton
+              pRipple
+              pSaveEditableRow
+              type="button">
+            </button>
+            <button
+              (click)="onRowEditCancel(row, rowIndex)"
+              *ngIf="editing"
+              class="w-1/2 p-button-rounded p-button-text p-button-danger text-red-700 hover:text-red-400 transition duration-200"
+              icon="pi pi-times"
+              pButton
+              pCancelEditableRow
+              pRipple
+              type="button">
+            </button>
           </div>
         </td>
 
