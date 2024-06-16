@@ -10,6 +10,10 @@ import {ToastModule} from "primeng/toast";
 import {ProjectsComponent} from "../projects/projects.component";
 import {TasksComponent} from "../projects-detail/tasks/tasks.component";
 import {SubtasksComponent} from "../projects-detail/subtasks/subtasks.component";
+import {TaskService} from "../../service/task-service.service";
+import {LoginServiceService} from "../../service/login-service.service";
+import {ProjectService} from "../../service/project-service.service";
+import {Router} from "@angular/router";
 
 
 @Component({
@@ -37,7 +41,13 @@ export class TaskSubtaskMasterComponent {
   @ViewChild("tasks")
   tasks: any;
   @Output() emitterBack = new EventEmitter<any>();
-
+  rol:any;
+  private token: string | null;
+  accesToken = "acces_token";
+  refreshToken = "refresh_token";
+  constructor(private service:TaskService , private loginService:LoginServiceService, private projectService:ProjectService, private router:Router){
+    this.token = sessionStorage.getItem(this.accesToken);
+  }
   handleData($event: any){
     this.row = $event;
     this.modifyDetailTaskSubtask();
@@ -48,7 +58,11 @@ export class TaskSubtaskMasterComponent {
     this.isDetailOnTaskSubtask = !this.isDetailOnTaskSubtask;
   }
   ngOnInit(){
-
+    this.projectService.getRole(this.row.id).subscribe(result=>{;
+      this.rol = result;
+    },error => {
+      console.error(error);
+    })
   }
 
   onBack(){

@@ -53,6 +53,39 @@ export class ProjectService {
     );
   }
 
+  removeProject(id: any): Observable<any> {
+    return this.service.getToken().pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+        return this.http.delete<any>(this.baseLink + "/api/Projects/" + id, { headers }).pipe(
+          catchError(error => {
+            console.error('Error adding project:', error);
+            throw error;
+          })
+        );
+      })
+    );
+  }
+
+  getRole(id: any): Observable<any> {
+    return this.service.getToken().pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+        // @ts-ignore
+        return this.http.get<any>(this.baseLink + "/api/Projects/" + id + "/my_role", { headers ,responseType:'text'}).pipe(
+          catchError(error => {
+            console.error('Error adding project:', error);
+            throw error;
+          })
+        );
+      })
+    );
+  }
+
 // @ts-ignore
 
   addUser(id: any, username: any): Observable<any> {

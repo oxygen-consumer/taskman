@@ -13,6 +13,7 @@ import {TaskService} from "../../../service/task-service.service";
 import {CalendarModule} from "primeng/calendar";
 import {BrowserModule} from "@angular/platform-browser";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-tasks',
@@ -52,8 +53,10 @@ export class TasksComponent {
   userEmail: string|null;
   id: any;
   projectId: any;
+  @Input()
+  rol:string;
 
-  constructor(private service:TaskService , private loginService:LoginServiceService, private projectService:ProjectService){
+  constructor(private service:TaskService , private loginService:LoginServiceService, private projectService:ProjectService, private router:Router){
     this.token = sessionStorage.getItem(this.accesToken);
    }
   onButtonClick(row:any) {
@@ -66,6 +69,7 @@ export class TasksComponent {
       this.loading = true;
       this.email = this.loginService.getEmail();
       this.loadElements();
+
     }
 
    initEditTask(){
@@ -217,6 +221,14 @@ export class TasksComponent {
     }, () => {
       console.error('Input gol sau invalid');
     });
+  }
+
+  deleteProject(){
+    this.projectService.removeProject(this.row.id).subscribe(result=>{
+      this.back();
+    },error => {
+      console.error("Stergerea nu a putut fi realizata");
+    })
   }
 
 

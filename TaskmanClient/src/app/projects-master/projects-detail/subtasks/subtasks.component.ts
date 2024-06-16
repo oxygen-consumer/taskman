@@ -16,6 +16,7 @@ import {DashboardComponent} from "../../../dashboard/dashboard.component";
 import {CalendarModule} from "primeng/calendar";
 import {Projects} from "../tasks/tasks.component";
 import {SubtaskService} from "../../../service/subtask-service";
+import {TaskService} from "../../../service/task-service.service";
 
 
 @Component({
@@ -61,10 +62,12 @@ export class SubtasksComponent {
   editProject:boolean = false;
   email:string|null;
   userEmail: string|null;
+  @Input()
+  rol:string;
   modifyDetailTaskSubtask(){
     this.isDetailOnTaskSubtask = !this.isDetailOnTaskSubtask;
   }
-  constructor(private service:SubtaskService , private loginService:LoginServiceService, private projectService:ProjectService){
+  constructor(private service:SubtaskService , private loginService:LoginServiceService, private projectService:ProjectService,private taskService:TaskService){
     this.token = sessionStorage.getItem(this.accesToken);
   }
   onButtonClick() {
@@ -197,6 +200,22 @@ export class SubtasksComponent {
 
   back(){
     this.emitter.emit("back");
+  }
+
+  deleteTask(){
+    this.taskService.removeTask(this.idTask).subscribe(result=>{
+      this.back();
+    },error => {
+      console.error("Stergerea nu a putut fi realizata");
+    })
+  }
+
+  deleteSubTask(row:any){
+    this.taskService.removeTask(row.id).subscribe(result=>{
+      this.loadElements();
+    },error => {
+      console.error("Stergerea nu a putut fi realizata");
+    })
   }
 
 }

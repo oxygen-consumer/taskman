@@ -51,6 +51,22 @@ export class TaskService {
     );
   }
 
+  removeTask(id: any): Observable<any> {
+    return this.service.getToken().pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${token}`
+        });
+        return this.http.delete<any>(this.baseLink + "/api/Tasks/"+id,  { headers }).pipe(
+          catchError(error => {
+            console.error('Error adding project:', error);
+            throw error;
+          })
+        );
+      })
+    );
+  }
+
 
 
 }
