@@ -8,16 +8,14 @@ namespace TaskmanAPI.Contexts;
 // RENAME THIS IF USING MORE CONTEXTS
 public class DefaultContext : IdentityDbContext<User>
 {
-    public DefaultContext(DbContextOptions<DefaultContext> options) : base(options)
-    {
-    }
+    public DefaultContext(DbContextOptions<DefaultContext> options) : base(options){}
 
     public DbSet<User> Users { get; set; }
     public DbSet<Project> Projects { get; set; }
     public DbSet<ProjTask> ProjTasks { get; set; }
     public DbSet<RolePerProject> RolePerProjects { get; set; }
     public DbSet<UserTasks> UserTasks { get; set; }
-    public DbSet<Notification> Notifications { get; set; }
+    public virtual DbSet<Notification> Notifications { get; set; }
 
     protected override void OnModelCreating(ModelBuilder
         modelBuilder)
