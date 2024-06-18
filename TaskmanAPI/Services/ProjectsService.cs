@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TaskmanAPI.Contexts;
 using TaskmanAPI.Enums;
@@ -36,7 +37,7 @@ public class ProjectsService
         return projects;
     }
 
-    public async Task<Project> GetProject(int id)
+    public async Task<ActionResult<Project>> GetProject(int id)
     {
         // we will throw a NotFound exception even if the project exists but the user does not have access
         if (!_privilegeChecker.HasAccessToProject(id))

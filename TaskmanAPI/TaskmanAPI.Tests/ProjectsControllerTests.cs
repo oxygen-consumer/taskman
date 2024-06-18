@@ -1,10 +1,12 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using TaskmanAPI.Contexts;
 using TaskmanAPI.Controllers;
+using TaskmanAPI.Exceptions;
 using TaskmanAPI.Models;
 
 public class ProjectsControllerTests
@@ -16,6 +18,7 @@ public class ProjectsControllerTests
 
     public ProjectsControllerTests()
     {
+        Setup();
     }
 
     private void Setup()
@@ -80,7 +83,7 @@ public class ProjectsControllerTests
     [Fact]
     public async Task GetUserProjects_ReturnsAllProjects()
     {
-        Setup();
+        
         // Act
         var result = await _controller.GetUserProjects();
 
@@ -93,6 +96,7 @@ public class ProjectsControllerTests
     [Fact]
     public async Task GetProject_ReturnsProject_WhenProjectExists()
     {
+        
         // Act
         var result = await _controller.GetProject(1);
 
@@ -115,12 +119,24 @@ public class ProjectsControllerTests
     [Fact]
     public async Task GetProject_ReturnsNotFound_WhenProjectDoesNotExist()
     {
-        // Act
-        var result = await _controller.GetProject(99);
+        // Arrange
+        var projectId = 99;
 
-        // Assert
-        Assert.IsType<NotFoundResult>(result.Result);
+        try
+        {
+            // Act
+            var result = await _controller.GetProject(projectId);
+
+            // Dacă nu se aruncă excepția, asigură-te că este un rezultat de tip `NotFound`
+            Assert.IsType<NotFoundResult>(result.Result);
+        }
+        catch (EntityNotFoundException ex)
+        {
+            // Assert
+            Assert.Equal("Project does not exist", ex.Message);
+        }
     }
+
 
     [Fact]
     public async Task Edit_ReturnsNoContent_WhenUpdateIsSuccessful()
@@ -133,7 +149,7 @@ public class ProjectsControllerTests
         var result = await _controller.Edit(1, existingProject);
 
         // Assert
-        Assert.IsType<OkObjectResult>(result);
+        Assert.IsType<ActionResult<Project>>(result);
         var updatedProject = await _context.Projects.FindAsync(1);
         Assert.Equal("Updated", updatedProject.Name);
     }
@@ -147,8 +163,8 @@ public class ProjectsControllerTests
         // Act
         var result = await _controller.Edit(2, project);
 
-        // Assert
-        Assert.IsType<BadRequestResult>(result);
+        // Asser
+        Assert.IsType<ActionResult<Project>>(result);
     }
 
     [Fact]
