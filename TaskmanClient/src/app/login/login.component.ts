@@ -46,7 +46,7 @@ export class LoginComponent {
         sessionStorage.setItem(this.refreshToken,data.refreshToken);
         sessionStorage.setItem(this.userEmail,values.email);
         form.reset();
-        this.router.navigate(["/dashboard"]);
+        this.router.navigate(["/dashboard/landing"]);
       }, error => {
         console.error('Error occured');
 

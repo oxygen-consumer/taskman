@@ -11,13 +11,12 @@ import {ProgressSpinnerModule} from "primeng/progressspinner";
 import {ToastModule} from "primeng/toast";
 import {NavigationComponent} from "../navigation/navigation.component";
 import {Router, RouterLink, RouterOutlet} from "@angular/router";
-import {LandingComponent} from "../landing/landing.component";
 
 
 @Component({
-  selector: 'app-dashboard',
+  selector: 'app-landing',
   standalone: true,
-  templateUrl: './dashboard.component.html',
+  templateUrl: './landing.component.html',
   imports: [
     TableModule,
     InputTextModule,
@@ -30,11 +29,10 @@ import {LandingComponent} from "../landing/landing.component";
     ProgressSpinnerModule,
     ToastModule,
     NavigationComponent,
-    LandingComponent,
   ],
-  styleUrl: './dashboard.component.scss'
+  styleUrl: './landing.component.scss'
 })
-export class DashboardComponent {
+export class LandingComponent {
 
   constructor(private router:Router){
 
