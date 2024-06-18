@@ -17,8 +17,9 @@
         <div class="hidden sm:ml-6 sm:block">
           <div class="flex space-x-4">
             <!-- Current: "bg-violet-400 text-white", Default: "text-gray-600 hover:bg-violet-300 hover:text-white" -->
-            <a href="http://localhost:4200/dashboard/landing" class="bg-violet-400 text-white rounded-md px-3 py-2 text-sm font-medium" aria-current="page">Dashboard</a>
-            <a href="http://localhost:4200/dashboard/projects" class="text-gray-600 hover:bg-violet-300 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Projects</a>
+            <a href="http://localhost:4200/dashboard/landing" class="bg-indigo-500 hover:bg-indigo-300 text-gray-600 text-white rounded-md px-3 py-2 text-sm font-medium" aria-current="page">Dashboard</a>
+            <a href="http://localhost:4200/dashboard/projects" class="bg-indigo-500 hover:bg-indigo-300 text-white hover:bg-indigo-300 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Projects</a>
+            <button (click)="logout()" class="text-gray-600 bg-indigo-500 hover:bg-indigo-300 text-white hover:text-white rounded-md px-3 py-2 text-sm font-medium">Log Out</button>
           </div>
         </div>
       </div>
@@ -31,6 +32,7 @@
     <div class="space-y-1 px-2 pb-3 pt-2">
       <a href="http://localhost:4200/dashboard/landing" class="bg-violet-400 text-white block rounded-md px-3 py-2 text-base font-medium" aria-current="page">Dashboard</a>
       <a href="http://localhost:4200/dashboard/projects" class="text-gray-600 hover:bg-violet-300 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Projects</a>
+      <button (click)="logout()" class="text-gray-600 bg-indigo-600 hover:bg-indigo-300 text-gray-600 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Log Out</button>
     </div>
   </div>
 </nav>
