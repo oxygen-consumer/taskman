@@ -15,4 +15,12 @@ export class NavigationComponent {
 
   }
 
+  logout(): void {
+    sessionStorage.removeItem('user_email');
+    sessionStorage.removeItem('acces_token');
+    sessionStorage.removeItem('refresh_token');
+
+    this.router.navigate(['/start']);
+  }
+
 }
