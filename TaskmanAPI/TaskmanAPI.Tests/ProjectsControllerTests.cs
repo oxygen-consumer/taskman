@@ -14,9 +14,7 @@ using TaskmanAPI.Services;
 public class ProjectsControllerTests
 {
     private DefaultContext _context;
-
     private ProjectsController _controller;
-    //private IHttpContextAccessor _contextAccessor;
 
     public ProjectsControllerTests()
     {

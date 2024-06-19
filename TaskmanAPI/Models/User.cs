@@ -7,9 +7,9 @@ namespace TaskmanAPI.Model;
 public class User : IdentityUser
 {
     // [Key]
-    // public String Id { get; set; }
+     //public String Id { get; set; }
     // [Required(ErrorMessage = "Numele de utilizator este obligatoriu")]
-    // public string UserName { get; set; }
+     //public string UserName { get; set; }
     // [Required(ErrorMessage = "Parola este obligatorie")]
     // public string Password { get; set; }
     // [Required(ErrorMessage = "Adresa de email este obligatorie")]

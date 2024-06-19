@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using TaskmanAPI.Contexts;
 using TaskmanAPI.Controllers;
+using TaskmanAPI.Exceptions;
 using TaskmanAPI.Model;
 using TaskmanAPI.Models;
 using TaskmanAPI.Services;
@@ -84,7 +81,9 @@ public class ProjTasksControllerTests
         {
             new ProjTask { Id = 1, Title = "Task 1", ProjectId = 1, Description = "desc1", Status = TaskStatus.InProgress},
             new ProjTask { Id = 2, Title = "Task 2", ProjectId = 1, Description = "desc2", Status = TaskStatus.Open, ParentId = 1},
-            new ProjTask { Id = 3, Title = "Task 3", ProjectId = 2, Description = "desc3", Status = TaskStatus.InProgress}
+            new ProjTask { Id = 3, Title = "Task 3", ProjectId = 2, Description = "desc3", Status = TaskStatus.InProgress},
+            new ProjTask { Id = 4, Title = "Task 4", ProjectId = 3, Description = "desc4", Status = TaskStatus.Open}
+
         };
         _context.ProjTasks.AddRange(tasks);
         
@@ -116,7 +115,23 @@ public class ProjTasksControllerTests
         var result = await _controller.GetUserTasks(projectId);
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
         var returnValue = Assert.IsType<List<ProjTask>>(okResult.Value);
-        Assert.Equal(2, returnValue.Count);
+        Assert.Equal(1, returnValue.Count);
+        
+    }
+    [Fact]
+    public async Task GetUserTasks_WhenProjectDoesNotExist()
+    {
+        var projectId = 9;
+        try
+        {
+            var result = await _controller.GetUserTasks(projectId);
+            Assert.True(false,"The project  exist in a scenerio where it shouldn`t");
+        }
+        catch (EntityNotFoundException e)
+        {
+            Assert.Equal("Project does not exist",e.Message);
+        }
+        
         
     }
 
@@ -128,9 +143,24 @@ public class ProjTasksControllerTests
         
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
         var returnValue = Assert.IsType<List<ProjTask>>(okResult.Value);
-        Assert.Equal(2, returnValue.Count);
+        Assert.Equal(1, returnValue.Count);
     }
 
+    [Fact]
+    public async Task GetAllTasks_WhenTheProjectDoesNotExist()
+    {
+        var projectId = 9;
+        try
+        {
+            var result = await _controller.GetAllTasks(projectId);
+            Assert.True(false,"The project  exist in a scenerio where it shouldn`t");
+        }
+        catch (EntityNotFoundException e)
+        {
+            Assert.Equal("Project does not exist",e.Message);
+        }
+        
+    }
     [Fact]
     public async Task GetProjTask_ReturnsOkResult_WhenTaskExistAndHaveAccess()
     {
@@ -142,6 +172,42 @@ public class ProjTasksControllerTests
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
         var returnValue = Assert.IsType<ProjTask>(okResult.Value);
         Assert.Equal(task, returnValue);
+    }
+    [Fact]
+    public async Task GetProjTask_WithoutAccess()
+    {
+        var taskId = 4;
+        try
+        {
+            var task = await _context.ProjTasks.FindAsync(taskId);
+            Assert.NotNull(task);
+            
+            var result = await _controller.GetProjTask(taskId);
+            Assert.True(false);
+        }
+        catch (EntityNotFoundException e)
+        {
+            Assert.Equal("Task does not exist",e.Message);
+        }
+        
+    }
+
+    [Fact]
+    public async Task GetProjTask_WhenProjectDoesNotExist()
+    {
+        var taskId = 9;
+        try
+        {
+            var task = await _context.ProjTasks.FindAsync(taskId);
+            Assert.Null(task);
+
+            var result = await _controller.GetProjTask(taskId);
+            Assert.True(false);
+        }
+        catch (EntityNotFoundException e)
+        {
+            Assert.Equal("Task does not exist", e.Message);
+        }
     }
 
     [Fact]
@@ -158,6 +224,25 @@ public class ProjTasksControllerTests
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
         var returnValue = Assert.IsType<ProjTask>(okResult.Value);
         Assert.Equal("Update", returnValue.Title);
+    }
+    [Fact]
+    public async Task PutProjTask_WithoutAccess()
+    {
+        try
+        {
+            // Arrange
+            var task = await _context.ProjTasks.FindAsync(4);
+            task.Title = "Update";
+       
+            // Act
+            var result = await _controller.PutProjTask(task);
+            Assert.True(false,"The example is not right");
+
+        }
+        catch (EntityNotFoundException e)
+        {
+            Assert.Equal("Project does not exist",e.Message);
+        }
     }
 
     [Fact]

@@ -2,6 +2,7 @@
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=94ecb224_002Db1cc_002D41fd_002Dab8f_002D35548bf09923/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="GetUserProjects_ReturnsAllProjects" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;xUnit::8A5367CC-EE14-4B61-9660-5329C67B8DB1::net8.0::ProjectsControllerTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::8A5367CC-EE14-4B61-9660-5329C67B8DB1::net8.0::ProjTasksControllerTests&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
 	
