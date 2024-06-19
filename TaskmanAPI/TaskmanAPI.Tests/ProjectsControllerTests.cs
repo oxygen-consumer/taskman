@@ -179,7 +179,7 @@ public class ProjectsControllerTests
     public async Task Edit_ReturnsBadRequest_WhenIdMismatch()
     {
         // Arrange
-        var project = new Project { Id = 1, Name = "Updated" };
+        var project = new Project { Id = 1, Name = "Updated", Description = "Description"};
 
         // Act
         var result = await _controller.Edit(2, project);
@@ -200,7 +200,7 @@ public class ProjectsControllerTests
             // Act
             if (project == null)
             {
-                var new_project = new Project{Id=projectId, Name="New name"};
+                var new_project = new Project{Id=projectId, Name="New name", Description = "Description"};
                 var result1 = await _controller.Edit(projectId, new_project);
             }
             else

@@ -53,4 +53,13 @@
         <UpToDateCheckInput Remove="Views\Shared\_ValidationScriptsPartial.cshtml"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Include="TaskmanAPI.Tests\TaskmanAPI.Tests.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="TaskmanAPI.Tests\obj\Debug\net8.0\refint\" />
+      <Folder Include="TaskmanAPI.Tests\obj\Debug\net8.0\ref\" />
+    </ItemGroup>
+
 </Project>

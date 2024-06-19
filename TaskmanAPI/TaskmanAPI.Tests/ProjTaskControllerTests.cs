@@ -79,10 +79,10 @@ public class ProjTasksControllerTests
 
         var tasks = new List<ProjTask>
         {
-            new ProjTask { Id = 1, Title = "Task 1", ProjectId = 1, Description = "desc1", Status = TaskStatus.InProgress},
-            new ProjTask { Id = 2, Title = "Task 2", ProjectId = 1, Description = "desc2", Status = TaskStatus.Open, ParentId = 1},
-            new ProjTask { Id = 3, Title = "Task 3", ProjectId = 2, Description = "desc3", Status = TaskStatus.InProgress},
-            new ProjTask { Id = 4, Title = "Task 4", ProjectId = 3, Description = "desc4", Status = TaskStatus.Open}
+            new ProjTask { Id = 1, Title = "Task 1", ProjectId = 1, Description = "desc1", Deadline = DateTime.Now, Status = TaskStatus.InProgress},
+            new ProjTask { Id = 2, Title = "Task 2", ProjectId = 1, Description = "desc2", Deadline = DateTime.Now, Status = TaskStatus.Open, ParentId = 1},
+            new ProjTask { Id = 3, Title = "Task 3", ProjectId = 2, Description = "desc3", Deadline = DateTime.Now, Status = TaskStatus.InProgress},
+            new ProjTask { Id = 4, Title = "Task 4", ProjectId = 3, Description = "desc4", Deadline = DateTime.Now, Status = TaskStatus.Open}
 
         };
         _context.ProjTasks.AddRange(tasks);
@@ -249,7 +249,7 @@ public class ProjTasksControllerTests
     public async Task PostProjTask_ReturnsOkResult_WithCreatedTask()
     {
         // Arrange
-        var task = new ProjTask { Id = 5, Title = "Task 5", ProjectId = 2, Description = "desc5", Status = TaskStatus.Open };
+        var task = new ProjTask { Id = 5, Title = "Task 5", ProjectId = 2, Description = "desc5", Deadline = DateTime.Now, Status = TaskStatus.Open };
         var result = await _controller.PostProjTask(task);
 
         // Assert
