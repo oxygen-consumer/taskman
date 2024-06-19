@@ -2,13 +2,11 @@ using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using TaskmanAPI.Contexts;
 using TaskmanAPI.Exceptions;
-using TaskmanAPI.Model;
 using TaskmanAPI.Models;
 using TaskStatus = TaskmanAPI.Enums.TaskStatus;
 
 namespace TaskmanAPI.Services;
 
-// FIXME: this is not final and some stuff is a bit off
 public class ProjTasksService
 {
     private readonly DefaultContext _context;

@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TaskmanAPI.Contexts;
 using TaskmanAPI.Enums;
@@ -25,7 +24,7 @@ public class ProjectsService
     {
         var userId = _user.FindFirstValue(ClaimTypes.NameIdentifier);
         var projectIds = await _context.RolePerProjects
-            .Where(rp => rp.UserId == userId && rp.ProjectId != null)
+            .Where(rp => rp.UserId == userId)
             .Select(rp => rp.ProjectId)
             .Distinct()
             .ToListAsync();
@@ -48,13 +47,14 @@ public class ProjectsService
     public async Task<Project> CreateProject(Project project)
     {
         _context.Projects.Add(project);
+        await _context.SaveChangesAsync(); // we need to do a save to generate a new ID
 
         var owner = await _context.Users.FindAsync(_user.FindFirstValue(ClaimTypes.NameIdentifier));
 
         var rolePerProject = new RolePerProject
         {
-            Project = project,
-            UserId = owner.Id,
+            ProjectId = project.Id,
+            UserId = owner!.Id,
             RoleName = Role.Owner.ToString()
         };
         _context.RolePerProjects.Add(rolePerProject);
@@ -278,5 +278,4 @@ public class ProjectsService
 
         return role!;
     }
-    
 }

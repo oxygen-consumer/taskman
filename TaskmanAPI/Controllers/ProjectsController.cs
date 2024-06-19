@@ -11,7 +11,7 @@ namespace TaskmanAPI.Controllers;
 [ApiController]
 [Authorize]
 public class ProjectsController(DefaultContext context, IHttpContextAccessor httpContextAccessor)
-    : Controller
+    : ControllerBase
 {
     private readonly ProjectsService _projectsService = new(context, httpContextAccessor);
     private readonly UserService _userService = new(context);
