@@ -106,7 +106,7 @@ public class ProjectsController(DefaultContext context, IHttpContextAccessor htt
     {
         return Ok(await _projectsService.GetProjectUsers(id));
     }
-    
+
     // get current user's role in project: api/projects/{id}/my_role
     [HttpGet("{id}/my_role")]
     public async Task<ActionResult<string>> GetMyRole(int id)

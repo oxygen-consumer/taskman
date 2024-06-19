@@ -2,13 +2,11 @@ using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using TaskmanAPI.Contexts;
 using TaskmanAPI.Exceptions;
-using TaskmanAPI.Model;
 using TaskmanAPI.Models;
 using TaskStatus = TaskmanAPI.Enums.TaskStatus;
 
 namespace TaskmanAPI.Services;
 
-// FIXME: this is not final and some stuff is a bit off
 public class ProjTasksService
 {
     private readonly DefaultContext _context;
@@ -46,7 +44,7 @@ public class ProjTasksService
         // return only tasks where parent id is null to avoid returning subtasks
         return await _context.ProjTasks.Where(t => t.ProjectId == projectId && t.ParentId == default).ToListAsync();
     }
-    
+
     public async Task<ProjTask> GetTask(int id)
     {
         var task = await _context.ProjTasks.FindAsync(id);
@@ -127,7 +125,7 @@ public class ProjTasksService
         var user = await _context.Users.FindAsync(userId);
         if (user == null)
             throw new EntityNotFoundException("User does not exist");
-        
+
         // check if user is part of the project
         if (!_context.RolePerProjects.Any(rp => rp.ProjectId == task.ProjectId && rp.UserId == userId))
             throw new EntityNotFoundException("User does not have access to project");
