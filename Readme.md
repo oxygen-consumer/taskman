@@ -38,6 +38,10 @@ Taskman is a collaborative task management app catered to the needs of IT specia
 
 ![trello pic!](assets/trello_back.png)
 
+# Diagrama UML
+
+[Link to diagram](TaskmanAPI/puml/include.puml)~~~~
+
 # Raportare bug si rezolvare cu pull request
 
 Issue: [There is no delete button for tasks #17](https://github.com/oxygen-consumer/taskman/issues/17), pull request: [rezolvare buton issue #17 #21](https://github.com/oxygen-consumer/taskman/pull/21)
@@ -52,10 +56,12 @@ Issue: [There is no delete button for tasks #17](https://github.com/oxygen-consu
 
 ![Funny comment!](assets/funny_comment.png)
 
+# Design patterns
+
+The backend was designed with three-layer architecture in mind: the presentation layer is inside the TaskmanClient folder, where all the frontend files are stored. The business layer consists of controllers and services, and the data layer is represented by the models and the database context.
+
+The ExceptionFilter functions as a factory method. It is used to create Exception objects from the three custom exception classes: EntityAlreadyExistsException, EntityNotFoundException, InsufficientPrivilegesException
+
 # Folosirea unui tool de AI
 
 ![Copilot convo 1!](assets/first_conv.jpeg)
-
-![Copilot convo 2!](assets/second_conv.jpeg)
-
-![Copilot convo 3!](assets/third_conv.jpeg)
