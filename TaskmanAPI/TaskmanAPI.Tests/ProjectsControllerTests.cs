@@ -75,14 +75,20 @@ public class ProjectsControllerTests
         // Adăugați role per proiect care sunt asociate utilizatorului
         var rolePerProjects = new List<RolePerProject>
         {
-            new RolePerProject { UserId = "user1", ProjectId = 1, RoleName = "Admin"},
+            new RolePerProject { UserId = "user1", ProjectId = 1, RoleName = "Owner"},
             new RolePerProject { UserId = "user1", ProjectId = 2, RoleName = "User"},
-            new RolePerProject { UserId = "user2", ProjectId = 3, RoleName = "User"}
+            new RolePerProject { UserId = "user2", ProjectId = 3, RoleName = "Admin"},
+            new RolePerProject { UserId = "user2", ProjectId = 1, RoleName = "User"}
+
         };
         _context.RolePerProjects.AddRange(rolePerProjects);
-        
-        
-        _context.Users.AddRange();
+
+        var users = new List<User>
+        {
+            new User() { Id = "user1", UserName = "Elena" },
+            new User() {Id ="user2", UserName = "Antonio"}
+        };
+        _context.Users.AddRange(users);
         _context.SaveChanges();
     }
     //1) GetUserProjects tests
@@ -234,14 +240,14 @@ public class ProjectsControllerTests
 
        
     }
-    
+    //4) New
     [Fact]
     public async Task New_Returns_OkObjectResult_For_Valid_Project()
     {
         // Arrange
         var lista = new List<RolePerProject>
         {
-            new RolePerProject(){ProjectId = 6,UserId = "user1",RoleName = "Owner"}
+            new RolePerProject(){ProjectId = 6,UserId = "user2",RoleName = "Owner"}
         };
         Assert.NotNull(lista);
         var validProject = new Project { Id = 6, Name = "Project 6", Description = "desc6",RolePerProjects = lista};
@@ -250,18 +256,257 @@ public class ProjectsControllerTests
 
         // Assert
         Assert.NotNull(result);
-        //Assert.Equal(200, result.StatusCode);
-/*
-        var createdProject = result.Value ;
-        Assert.NotNull(createdProject);
-        Assert.Equal(validProject.Name, createdProject.Name);
-        Assert.Equal(validProject.Description, createdProject.Description);
 
-        // Verificăm dacă proiectul a fost adăugat în baza de date
-        var projectInDb = await _context.Projects.FindAsync(createdProject.Id);
-        Assert.NotNull(projectInDb);
-        Assert.Equal(validProject.Name, projectInDb.Name);
-        Assert.Equal(validProject.Description, projectInDb.Description);
-*/
+        var verify = await _context.Projects.FindAsync(6);
+        Assert.NotNull(verify);
+        
     }
+    //5)Delete
+    [Fact]
+    public async Task Delete_Returns_NoContent()
+    {
+        // Arrange
+        var projectId = 1;
+        // You need to have access and privileges to delete a project
+        // You are user1 and for project 1 you are the owner
+       
+        // Act
+        var result = await _controller.Delete(projectId);
+
+        // Assert
+        Assert.IsType<NoContentResult>(result);
+    }
+    
+    [Fact]
+    public async Task Delete_WithoutAccess_OrTheProjectDoesNotExist()
+    {
+        // Arrange
+        var projectId = 9;
+        try
+        {
+            // Act
+            var result = await _controller.Delete(projectId);
+            // Assert
+            Assert.True(false,"For this test you are not supposed to have access");
+        }
+        catch (EntityNotFoundException e)
+        {
+           Assert.Equal("Project does not exist",e.Message);
+        }
+    }
+    [Fact]
+    public async Task Delete_WithAccess_ButWithoutPrivileges()
+    {
+        // Arrange
+        var projectId = 2;
+        try
+        {
+            // Act
+            var result = await _controller.Delete(projectId);
+            // Assert
+            Assert.True(false,"For this test you are not supposed to have access");
+        }
+        catch (InsufficientPrivilegesException e)
+        {
+            Assert.Equal("You do not have the required privileges to delete this project",e.Message);
+        }
+        catch (EntityNotFoundException e)
+        {
+            Assert.True(false,"The project does not have acces or doesn`t exist");
+        }
+    }
+    
+    //6)AddUser
+    [Fact]
+    public async Task AddUser_Returns_Ok()
+    {
+        // Arrange
+        var projectId = 1; //You are Owner for project 1 you have access and privileges to add a new user
+        var username = "Antonio";
+        var userId = "user2";
+        
+        // Act
+        var result = await _controller.AddUser(projectId, username);
+
+        // Assert
+        Assert.IsType<OkResult>(result);
+    }
+    
+    [Fact]
+    public async Task AddUser_HasAccessButNotPrivileges()
+    {
+        try
+        {
+            // Arrange
+            var projectId = 2;
+            var username = "Antonio";
+            var userId = "user2";
+
+            // Act
+            var result = await _controller.AddUser(projectId, username);
+
+            // Assert
+            Assert.True(false, "the example is not valid for this scenario");
+        }
+        catch (InsufficientPrivilegesException e)
+        {
+            Assert.Equal("You do not have the required privileges to add a user to this project", e.Message);
+        }
+        catch (Exception e)
+        {
+            Assert.True(false, "the example is not valid for this scenario"); 
+        }
+        
+        
+    }
+   [Fact]
+    public async Task AddUser_ButUserDoesNotExist()
+    {
+        try
+        {
+            // Arrange
+            var projectId = 1;
+            var username = "Arnold";
+            var userId = "user5";
+
+            // Act
+            var result = await _controller.AddUser(projectId, username);
+
+            // Assert
+            Assert.True(false, "the example is not valid for this scenario");
+        }
+        catch (EntityNotFoundException e)
+        {
+            Assert.Equal("User does not exist", e.Message);
+        }
+        catch (Exception e)
+        {
+            Assert.True(false, "the example is not valid for this scenario"); 
+        }
+        
+    }
+    [Fact]
+    public async Task AddUser_ButUserIsAlreadyInProject()
+    {
+        try
+        {
+            // Arrange
+            var projectId = 1;
+            var username = "Antonio";
+            var userId = "user2";
+
+            // Act
+            var result = await _controller.AddUser(projectId, username);
+            // Assert
+            Assert.True(false, "the example is not valid for this scenario");
+        }
+        catch (EntityAlreadyExistsException e)
+        {
+            Assert.Equal("User is already part of the project", e.Message);
+        }
+        catch (Exception e)
+        {
+            Assert.True(false, "the example is not valid for this scenario"); 
+        }
+        
+    }
+    //7)RemoveUser
+    [Fact]
+    public async Task RemoveUser_Returns_Ok()
+    {
+        // Arrange
+        var projectId = 1;
+        var username = "Antonio";
+        var userId = "user2";
+        // Act
+        var result = await _controller.RemoveUser(projectId, username);
+
+        // Assert
+        Assert.IsType<OkResult>(result);
+    }
+    
+    //PromoteUser
+    [Fact]
+    public async Task PromoteUser_Returns_Ok()
+    {
+        // Arrange
+        var projectId = 1;
+        var username = "Antonio";
+        var userId = "user2";
+        
+        // Act
+        var result = await _controller.PromoteUser(projectId, username);
+
+        // Assert
+        Assert.IsType<OkResult>(result);
+        var user = await _context.RolePerProjects.FindAsync(userId,projectId);
+        Assert.Equal("Admin",user.RoleName);
+    }
+    
+    [Fact]
+    public async Task TransferOwnership_Returns_Ok()
+    {
+        // Arrange
+        var projectId = 1;
+        var username = "Antonio";
+        var userId = "user2";
+    
+         // Act
+        var result = await _controller.TransferOwnership(projectId, username);
+
+        // Assert
+        Assert.IsType<OkResult>(result);
+        var user = await _context.RolePerProjects.FindAsync(userId,projectId);
+        Assert.Equal("Owner",user.RoleName);
+
+    }
+    [Fact]
+    public async Task DemoteUser_Returns_Ok()
+    {
+        // Arrange
+        var projectId = 1;
+        var username = "Antonio";
+        var userId = "user2";
+        
+        // Act
+        var result = await _controller.DemoteUser(projectId, username);
+
+        // Assert
+        Assert.IsType<OkResult>(result);
+           }
+    
+    [Fact]
+    public async Task GetProjectUsers_Returns_Ok_With_Users()
+    {
+        // Arrange
+        var projectId = 1;
+        // Act
+        var result = await _controller.GetProjectUsers(projectId);
+
+        // Assert
+        var okResult = result.Result as OkObjectResult;
+        Assert.NotNull(okResult);
+        Assert.Equal(200, okResult.StatusCode);
+        
+    }
+    
+    [Fact]
+    public async Task GetMyRole_Returns_Ok_With_Role()
+    {
+        // Arrange
+        var projectId = 1;
+        var role = "Owner";
+        
+        // Act
+        var result = await _controller.GetMyRole(projectId);
+
+        // Assert
+        var okResult = result.Result as OkObjectResult;
+        Assert.NotNull(okResult);
+        Assert.Equal(200, okResult.StatusCode);
+        Assert.Equal(role, okResult.Value);
+    }
+
+
+
 }
