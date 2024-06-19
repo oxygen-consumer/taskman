@@ -6,22 +6,11 @@ namespace TaskmanAPI.Models;
 
 public class RolePerProject
 {
-    public RolePerProject()
-    {
-    }
+    [MaxLength(36)] public required string UserId { get; set; }
 
-    public RolePerProject(string? userid, int projid, string v)
-    {
-        UserId = userid;
-        ProjectId = projid;
-        RoleName = v;
-    }
+    public required int ProjectId { get; set; }
 
-    public string? UserId { get; set; }
-
-    public int? ProjectId { get; set; }
-
-    [Required] public string RoleName { get; set; }
+    [MaxLength(5)] public required string RoleName { get; set; }
 
     [JsonIgnore] public virtual Project? Project { get; set; }
 

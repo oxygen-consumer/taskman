@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TaskmanAPI.Contexts;
-using TaskmanAPI.Model;
+using TaskmanAPI.Models;
 using TaskmanAPI.Services;
 
 namespace TaskmanAPI.Controllers;

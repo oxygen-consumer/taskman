@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TaskmanAPI.Contexts;
@@ -11,9 +12,11 @@ using TaskmanAPI.Contexts;
 namespace TaskmanAPI.Migrations
 {
     [DbContext(typeof(DefaultContext))]
-    partial class DefaultContextModelSnapshot : ModelSnapshot
+    [Migration("20240616105955_remove notifications")]
+    partial class removenotifications
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -154,6 +157,41 @@ namespace TaskmanAPI.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("TaskmanAPI.Model.ProjTask", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Deadline")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("ParentId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("ProjTasks");
+                });
+
             modelBuilder.Entity("TaskmanAPI.Model.User", b =>
                 {
                     b.Property<string>("Id")
@@ -218,43 +256,6 @@ namespace TaskmanAPI.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("TaskmanAPI.Models.ProjTask", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("Deadline")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<int>("ParentId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProjectId");
-
-                    b.ToTable("ProjTasks");
-                });
-
             modelBuilder.Entity("TaskmanAPI.Models.Project", b =>
                 {
                     b.Property<int>("Id")
@@ -265,13 +266,11 @@ namespace TaskmanAPI.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -281,16 +280,14 @@ namespace TaskmanAPI.Migrations
             modelBuilder.Entity("TaskmanAPI.Models.RolePerProject", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasMaxLength(36)
-                        .HasColumnType("character varying(36)");
+                        .HasColumnType("text");
 
-                    b.Property<int>("ProjectId")
+                    b.Property<int?>("ProjectId")
                         .HasColumnType("integer");
 
                     b.Property<string>("RoleName")
                         .IsRequired()
-                        .HasMaxLength(5)
-                        .HasColumnType("character varying(5)");
+                        .HasColumnType("text");
 
                     b.HasKey("UserId", "ProjectId");
 
@@ -302,8 +299,7 @@ namespace TaskmanAPI.Migrations
             modelBuilder.Entity("TaskmanAPI.Models.UserTasks", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasMaxLength(36)
-                        .HasColumnType("character varying(36)");
+                        .HasColumnType("text");
 
                     b.Property<int>("TaskId")
                         .HasColumnType("integer");
@@ -366,10 +362,10 @@ namespace TaskmanAPI.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TaskmanAPI.Models.ProjTask", b =>
+            modelBuilder.Entity("TaskmanAPI.Model.ProjTask", b =>
                 {
                     b.HasOne("TaskmanAPI.Models.Project", "Project")
-                        .WithMany("Tasks")
+                        .WithMany("Task")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -398,7 +394,7 @@ namespace TaskmanAPI.Migrations
 
             modelBuilder.Entity("TaskmanAPI.Models.UserTasks", b =>
                 {
-                    b.HasOne("TaskmanAPI.Models.ProjTask", "Task")
+                    b.HasOne("TaskmanAPI.Model.ProjTask", "Task")
                         .WithMany("UserTasks")
                         .HasForeignKey("TaskId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -415,6 +411,11 @@ namespace TaskmanAPI.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("TaskmanAPI.Model.ProjTask", b =>
+                {
+                    b.Navigation("UserTasks");
+                });
+
             modelBuilder.Entity("TaskmanAPI.Model.User", b =>
                 {
                     b.Navigation("RolePerProjects");
@@ -422,16 +423,11 @@ namespace TaskmanAPI.Migrations
                     b.Navigation("UserTasks");
                 });
 
-            modelBuilder.Entity("TaskmanAPI.Models.ProjTask", b =>
-                {
-                    b.Navigation("UserTasks");
-                });
-
             modelBuilder.Entity("TaskmanAPI.Models.Project", b =>
                 {
                     b.Navigation("RolePerProjects");
 
-                    b.Navigation("Tasks");
+                    b.Navigation("Task");
                 });
 #pragma warning restore 612, 618
         }
