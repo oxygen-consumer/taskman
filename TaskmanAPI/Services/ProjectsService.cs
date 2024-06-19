@@ -264,7 +264,7 @@ public class ProjectsService
 
         return users;
     }
-    
+
     public async Task<string> GetMyRole(int projectId)
     {
         if (!_privilegeChecker.HasAccessToProject(projectId))

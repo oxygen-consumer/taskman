@@ -17,7 +17,8 @@ public class User : IdentityUser
 
 
     //to add - notification, comment, reaction (?)
-    public virtual ICollection<ProjTask>? Tasks { get; set; }
+    public ICollection<Notification> Notifications { get; set; }
+    public virtual ICollection<UserTasks> UserTasks { get; set; } = new List<UserTasks>();
 
     [JsonIgnore] public virtual ICollection<RolePerProject>? RolePerProjects { get; set; }
 }
