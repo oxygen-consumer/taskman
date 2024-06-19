@@ -1,0 +1,11 @@
+@startuml
+class ProjTask {
+    + Id : int <<get>> <<set>>
+    + ProjectId : int <<get>> <<set>>
+    + ParentId : int <<get>> <<set>>
+    + Title : string <<get>> <<set>>
+    + Description : string <<get>> <<set>>
+}
+
+ProjTask "1" --> "0..*" ProjTask  : "can have subtasks"
+@enduml

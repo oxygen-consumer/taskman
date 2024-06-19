@@ -1,0 +1,6 @@
+@startuml
+class CustomExceptionFilter {
+    + OnException(context:ExceptionContext) : void
+}
+IExceptionFilter <|-- CustomExceptionFilter
+@enduml

@@ -1,0 +1,15 @@
+@startuml
+class ProjTasksController {
+    + <<async>> GetUserTasks(projectId:int) : Task<ActionResult<IEnumerable<ProjTask>>>
+    + <<async>> GetAllTasks(projectId:int) : Task<ActionResult<IEnumerable<ProjTask>>>
+    + <<async>> GetProjTask(id:int) : Task<ActionResult<ProjTask>>
+    + <<async>> PutProjTask(projTask:ProjTask) : Task<ActionResult<ProjTask>>
+    + <<async>> PostProjTask(projTask:ProjTask) : Task<ActionResult<ProjTask>>
+    + <<async>> DeleteProjTask(id:int) : Task<ActionResult>
+    + <<async>> AssignUsers(id:int, username:string) : Task<ActionResult<ProjTask>>
+    + <<async>> RemoveUsers(id:int, username:string) : Task<ActionResult<ProjTask>>
+    + <<async>> ChangeStatus(id:int, status:string) : Task<ActionResult<ProjTask>>
+    + <<async>> GetSubtasks(id:int) : Task<ActionResult<IEnumerable<ProjTask>>>
+}
+ControllerBase <|-- ProjTasksController
+@enduml

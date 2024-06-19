@@ -1,0 +1,19 @@
+@startuml
+class ProjectsService {
+    + ProjectsService(context:DefaultContext, httpContextAccessor:IHttpContextAccessor)
+    + <<async>> GetUserProjects() : Task<IEnumerable<Project>>
+    + <<async>> GetProject(id:int) : Task<Project>
+    + <<async>> CreateProject(project:Project) : Task<Project>
+    + <<async>> EditProject(project:Project) : Task<Project>
+    + <<async>> DeleteProject(id:int) : Task
+    + <<async>> AddUser(projectId:int, userId:string) : Task
+    + <<async>> RemoveUser(projectId:int, userId:string) : Task
+    + <<async>> PromoteUser(projectId:int, userId:string) : Task
+    + <<async>> DemoteUser(projectId:int, userId:string) : Task
+    + <<async>> TransferOwnership(projectId:int, userId:string) : Task
+    + <<async>> GetProjectUsers(projectId:int) : Task<IEnumerable<object>>
+    + <<async>> GetMyRole(projectId:int) : Task<string>
+}
+
+ProjectsService -- ProjectsController
+@enduml

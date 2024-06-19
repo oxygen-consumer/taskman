@@ -1,0 +1,5 @@
+@startuml
+class EntityAlreadyExistsException {
+}
+ArgumentException <|-- EntityAlreadyExistsException
+@enduml

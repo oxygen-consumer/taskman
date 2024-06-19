@@ -1,0 +1,9 @@
+﻿@startuml
+class UserTasks {
+    + UserId : string <<get>> <<set>>
+    + TaskId : int <<get>> <<set>>
+}
+
+ProjTask "1" --> "0..*" UserTasks : users assigned to a task
+User "1" --> "0..*" UserTasks : users have tasks
+@enduml

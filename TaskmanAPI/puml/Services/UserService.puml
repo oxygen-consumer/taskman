@@ -1,0 +1,5 @@
+@startuml
+class UserService {
+    + <<async>> GetUserIdByUsername(username:string) : Task<string>
+}
+@enduml

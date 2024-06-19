@@ -1,0 +1,17 @@
+@startuml
+class ProjectsController {
+    + <<async>> GetUserProjects() : Task<ActionResult<IEnumerable<Project>>>
+    + <<async>> GetProject(id:int) : Task<ActionResult<Project>>
+    + <<async>> Edit(id:int, project:Project) : Task<ActionResult<Project>>
+    + <<async>> New(project:Project) : Task<ActionResult<Project>>
+    + <<async>> Delete(id:int) : Task<ActionResult>
+    + <<async>> AddUser(id:int, username:string) : Task<ActionResult>
+    + <<async>> RemoveUser(id:int, username:string) : Task<ActionResult>
+    + <<async>> PromoteUser(id:int, username:string) : Task<ActionResult>
+    + <<async>> TransferOwnership(id:int, username:string) : Task<ActionResult>
+    + <<async>> DemoteUser(id:int, username:string) : Task<ActionResult>
+    + <<async>> GetProjectUsers(id:int) : Task<ActionResult<IEnumerable<object>>>
+    + <<async>> GetMyRole(id:int) : Task<ActionResult<string>>
+}
+ControllerBase <|-- ProjectsController
+@enduml
