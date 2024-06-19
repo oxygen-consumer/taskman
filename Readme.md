@@ -1,3 +1,11 @@
+# Compozitia echipei
+
+1. Dan Alexandru - grupa 241
+2. Radu Ioana Alexandra - grupa 241
+3. Rusti Emilia Noemi - grupa 241
+4. Vizinteanu Teodora - grupa 241
+5. Zaharie Stefan Florin - grupa 251
+
 # Epic story
 
 Taskman is a collaborative task management app catered to the needs of IT specialists who seek a platform on which to organize personal or team projects. This app aims to improve efficiency and productivity, and offers the ability to create projects, assign roles, create tasks and subtasks and assign users to tasks.
@@ -65,3 +73,11 @@ The ExceptionFilter functions as a factory method. It is used to create Exceptio
 # Folosirea unui tool de AI
 
 ![Copilot convo 1!](assets/first_conv.jpeg)
+
+# Teste automate
+
+Merged in [Pull request #24](https://github.com/oxygen-consumer/taskman/pull/24)
+
+# Demo
+
+[Demo on youtube](https://www.youtube.com/)
