@@ -37,7 +37,7 @@ public class ProjectsService
         return projects;
     }
 
-    public async Task<ActionResult<Project>> GetProject(int id)
+    public async Task<Project> GetProject(int id)
     {
         // we will throw a NotFound exception even if the project exists but the user does not have access
         if (!_privilegeChecker.HasAccessToProject(id))
@@ -54,7 +54,7 @@ public class ProjectsService
         var rolePerProject = new RolePerProject
         {
             Project = project,
-            UserId = owner!.Id,
+            UserId = owner.Id,
             RoleName = Role.Owner.ToString()
         };
         _context.RolePerProjects.Add(rolePerProject);
