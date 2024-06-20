@@ -1,9 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <BaseOutputPath>$(SolutionDir)\bin\$(MSBuildProjectName)\</BaseOutputPath>
-        <BaseIntermediateOutputPath>$(SolutionDir)\obj\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
-
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -12,60 +9,37 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Compile Remove="TaskmanAPI.Tests\bin\**" />
-      <Compile Remove="TaskmanAPI.Tests\obj\**" />
-      <Content Remove="TaskmanAPI.Tests\bin\**" />
-      <Content Remove="TaskmanAPI.Tests\obj\**" />
-      <EmbeddedResource Remove="TaskmanAPI.Tests\bin\**" />
-      <EmbeddedResource Remove="TaskmanAPI.Tests\obj\**" />
-      <None Remove="TaskmanAPI.Tests\bin\**" />
-      <None Remove="TaskmanAPI.Tests\obj\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.4" />
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.1" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.6" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.6" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.4" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.4" />
+        <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.4"/>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.1"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.4"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.4"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.4">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
-        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
-        <PackageReference Include="Moq" Version="4.20.70" />
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
-        <PackageReference Include="xunit" Version="2.8.1" />
-        <PackageReference Include="xunit.runner.visualstudio" Version="2.8.1">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
+        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2"/>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
     </ItemGroup>
 
     <ItemGroup>
-        <_ContentIncludedByDefault Remove="Views\ProjTasks1\Create.cshtml" />
-        <_ContentIncludedByDefault Remove="Views\ProjTasks1\Delete.cshtml" />
-        <_ContentIncludedByDefault Remove="Views\ProjTasks1\Details.cshtml" />
-        <_ContentIncludedByDefault Remove="Views\ProjTasks1\Edit.cshtml" />
-        <_ContentIncludedByDefault Remove="Views\ProjTasks1\Index.cshtml" />
-        <_ContentIncludedByDefault Remove="Views\Shared\_ValidationScriptsPartial.cshtml" />
+        <_ContentIncludedByDefault Remove="Views\ProjTasks1\Create.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\ProjTasks1\Delete.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\ProjTasks1\Details.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\ProjTasks1\Edit.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\ProjTasks1\Index.cshtml"/>
+        <_ContentIncludedByDefault Remove="Views\Shared\_ValidationScriptsPartial.cshtml"/>
     </ItemGroup>
 
     <ItemGroup>
-        <UpToDateCheckInput Remove="Views\ProjTasks1\Create.cshtml" />
-        <UpToDateCheckInput Remove="Views\ProjTasks1\Delete.cshtml" />
-        <UpToDateCheckInput Remove="Views\ProjTasks1\Details.cshtml" />
-        <UpToDateCheckInput Remove="Views\ProjTasks1\Edit.cshtml" />
-        <UpToDateCheckInput Remove="Views\ProjTasks1\Index.cshtml" />
-        <UpToDateCheckInput Remove="Views\Shared\_ValidationScriptsPartial.cshtml" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Content Include="TaskmanAPI.Tests\TaskmanAPI.Tests.csproj" />
+        <UpToDateCheckInput Remove="Views\ProjTasks1\Create.cshtml"/>
+        <UpToDateCheckInput Remove="Views\ProjTasks1\Delete.cshtml"/>
+        <UpToDateCheckInput Remove="Views\ProjTasks1\Details.cshtml"/>
+        <UpToDateCheckInput Remove="Views\ProjTasks1\Edit.cshtml"/>
+        <UpToDateCheckInput Remove="Views\ProjTasks1\Index.cshtml"/>
+        <UpToDateCheckInput Remove="Views\Shared\_ValidationScriptsPartial.cshtml"/>
     </ItemGroup>
 
 </Project>

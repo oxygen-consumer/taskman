@@ -1,17 +1,21 @@
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import {AppComponent} from "./app.component";
 import {BrowserModule} from "@angular/platform-browser";
-import {RouterModule} from "@angular/router";
+import {Router, RouterModule} from "@angular/router";
 import {FormsModule} from "@angular/forms";
 import {LoginComponent} from "./login/login.component";
 import {HeaderComponent} from "./header/header.component";
 import {HttpClientModule} from "@angular/common/http";
+import {LoginServiceService} from "./service/login-service.service";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 
+
 @NgModule({
-  declarations: [],
+  declarations: [
+
+  ],
   exports: [
     HeaderComponent,
 
@@ -30,5 +34,4 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
   ]
 })
-export class AppModule {
-}
+export class AppModule { }

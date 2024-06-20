@@ -1,8 +1,8 @@
-import {Component} from '@angular/core';
-import {RouterOutlet} from '@angular/router';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import {FormBuilder, FormGroup, NgForm, ReactiveFormsModule, Validators} from "@angular/forms";
 import {LoginServiceService} from "../service/login-service.service";
-import {HttpClientModule} from "@angular/common/http";
+import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {HeaderComponent} from "../header/header.component";
 
 @Component({
