@@ -31,6 +31,9 @@
         <_ContentIncludedByDefault Remove="Views\ProjTasks1\Edit.cshtml"/>
         <_ContentIncludedByDefault Remove="Views\ProjTasks1\Index.cshtml"/>
         <_ContentIncludedByDefault Remove="Views\Shared\_ValidationScriptsPartial.cshtml"/>
+        <_ContentIncludedByDefault Remove="TaskmanAPI.Tests\obj\project.assets.json" />
+        <_ContentIncludedByDefault Remove="TaskmanAPI.Tests\obj\project.packagespec.json" />
+        <_ContentIncludedByDefault Remove="TaskmanAPI.Tests\obj\TaskmanAPI.Tests.csproj.nuget.dgspec.json" />
     </ItemGroup>
 
     <ItemGroup>
