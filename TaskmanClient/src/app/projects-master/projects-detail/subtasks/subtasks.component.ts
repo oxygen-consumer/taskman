@@ -160,7 +160,8 @@ export class SubtasksComponent {
         "parentId": row['parentId'],
         "title": row['title'],
         "description": row['description'],
-        "deadline":row['deadline']
+        "deadline":row['deadline'],
+        "status":row['status']
       }
       console.log(savedObject);
       this.service.modifyTasks(row["id"],savedObject).subscribe(()=>{
@@ -181,7 +182,8 @@ export class SubtasksComponent {
         "parentId": this.idTask,
         "title": row['title'],
         "description": row['description'],
-        "deadline":row['deadline']
+        "deadline":row['deadline'],
+        "status":row['status']
       }
       console.log(savedObject);
       this.service.addTasks(savedObject).subscribe(result=>{

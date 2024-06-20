@@ -74,10 +74,10 @@ The ExceptionFilter functions as a factory method. It is used to create Exceptio
 
 ![Copilot convo 1!](assets/first_conv.jpeg)
 
-# Teste automate
+# Incercare pentru testarea automata
 
 Merged in [Pull request #24](https://github.com/oxygen-consumer/taskman/pull/24)
 
 # Demo
 
-[Demo on youtube](https://www.youtube.com/)
+[Demo on youtube](https://www.youtube.com/watch?v=x8fejXsREtI)
