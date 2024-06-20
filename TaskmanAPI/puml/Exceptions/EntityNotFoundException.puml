@@ -1,0 +1,5 @@
+@startuml
+class EntityNotFoundException {
+}
+ArgumentException <|-- EntityNotFoundException
+@enduml

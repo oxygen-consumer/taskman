@@ -1,0 +1,13 @@
+@startuml
+class DefaultContext {
+    + DefaultContext(options:DbContextOptions<DefaultContext>)
+    + Users : DbSet<User> <<get>> <<set>>
+    + Projects : DbSet<Project> <<get>> <<set>>
+    + ProjTasks : DbSet<ProjTask> <<get>> <<set>>
+    + RolePerProjects : DbSet<RolePerProject> <<get>> <<set>>
+    + UserTasks : DbSet<UserTasks> <<get>> <<set>>
+}
+class "IdentityDbContext`1"<T> {
+}
+"IdentityDbContext`1" <|-- DefaultContext
+@enduml

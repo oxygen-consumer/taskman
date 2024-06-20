@@ -1,5 +1,5 @@
 import {Component, ElementRef, ViewChild, ViewChildren} from '@angular/core';
-import {RouterOutlet } from '@angular/router';
+import {Router, RouterOutlet} from '@angular/router';
 import {FormBuilder, FormGroup,ReactiveFormsModule, Validators} from "@angular/forms";
 import {LoginServiceService} from "../service/login-service.service";
 import {HttpClientModule} from "@angular/common/http";
@@ -21,7 +21,7 @@ export class RegisterComponent {
   message:string | undefined;
   @ViewChildren('para') firstParagraph!: any;
 
-  constructor(private fb: FormBuilder, private loginService: LoginServiceService) {
+  constructor(private fb: FormBuilder, private loginService: LoginServiceService, private router:Router) {
     this.registerForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
@@ -39,6 +39,7 @@ export class RegisterComponent {
     if (this.registerForm.valid) {
       this.loginService.onRegister(values).subscribe(result => {
         form.reset();
+        this.router.navigate(["/login"]);
         this.message = "Valoare introdusa corect";
         //this.firstParagraph.nativeElement.style.backgroundColor = 'green';
         this.isMessageShown = true;

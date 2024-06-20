@@ -1,0 +1,17 @@
+@startuml
+class ProjTasksService {
+    + ProjTasksService(context:DefaultContext, httpContextAccessor:IHttpContextAccessor)
+    + <<async>> GetUserTasks(projectId:int) : Task<IEnumerable<ProjTask>>
+    + <<async>> GetAllTasks(projectId:int) : Task<IEnumerable<ProjTask>>
+    + <<async>> GetTask(id:int) : Task<ProjTask>
+    + <<async>> CreateTask(task:ProjTask) : Task<ProjTask>
+    + <<async>> EditTask(task:ProjTask) : Task<ProjTask>
+    + <<async>> DeleteTask(id:int) : Task
+    + <<async>> AddUser(id:int, userId:string) : Task<ProjTask>
+    + <<async>> RemoveUser(id:int, userId:string) : Task<ProjTask>
+    + <<async>> ChangeStatus(id:int, status:string) : Task<ProjTask>
+    + <<async>> GetSubtasks(id:int) : Task<IEnumerable<ProjTask>>
+}
+
+ProjTasksService -- ProjTasksController
+@enduml

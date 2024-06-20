@@ -1,0 +1,20 @@
+@startuml
+!include .\\Contexts\DefaultContext.puml
+!include .\\Controllers\ProjectsController.puml
+!include .\\Controllers\ProjTasksController.puml
+!include .\\Enums\Role.puml
+!include .\\Enums\TaskStatus.puml
+!include .\\Exceptions\EntityAlreadyExistsException.puml
+!include .\\Exceptions\EntityNotFoundException.puml
+!include .\\Exceptions\InsufficientPrivilegesException.puml
+!include .\\Filters\CustomExceptionFilter.puml
+!include .\\Models\Project.puml
+!include .\\Models\ProjTask.puml
+!include .\\Models\RolePerProject.puml
+!include .\\Models\User.puml
+!include .\\Models\UserTasks.puml
+!include .\\Services\PrivilegeChecker.puml
+!include .\\Services\ProjectsService.puml
+!include .\\Services\ProjTasksService.puml
+!include .\\Services\UserService.puml
+@enduml

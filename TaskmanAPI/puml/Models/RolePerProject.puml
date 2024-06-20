@@ -1,0 +1,11 @@
+@startuml
+class RolePerProject {
+    + RolePerProject()
+    + RolePerProject(userid:string?, projid:int, v:string)
+    + UserId : string? <<get>> <<set>>
+    + ProjectId : int? <<get>> <<set>>
+    + RoleName : string <<get>> <<set>>
+}
+RolePerProject "1..*" <-- "1" "Project": have roles for the users
+RolePerProject "0..*" <-- "1" "User" : has one for each project
+@enduml

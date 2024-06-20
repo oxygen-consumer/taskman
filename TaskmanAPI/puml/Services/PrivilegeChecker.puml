@@ -1,0 +1,6 @@
+@startuml
+class PrivilegeChecker {
+    + HasAccessToProject(projectId:int) : bool
+    + HasPrivilege(projectId:int, role:Role) : bool
+}
+@enduml
