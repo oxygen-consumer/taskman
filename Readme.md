@@ -48,7 +48,7 @@ Taskman is a collaborative task management app catered to the needs of IT specia
 
 # Diagrama UML
 
-[Link to diagram](TaskmanAPI/puml/include.puml)~~~~
+![UML diagram](./assets/uml_export.png)
 
 # Raportare bug si rezolvare cu pull request
 
